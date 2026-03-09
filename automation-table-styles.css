@@ -2,17 +2,26 @@
 .automation-table-container {
     overflow-x: auto;
     margin-bottom: 20px;
+    width: 100%;
 }
 
 .automation-table {
     width: 100%;
     border-collapse: collapse;
     background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+#all-automations .automation-table {
+    min-width: 1460px;
 }
 
 .automation-table thead {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+    background: white;
+    color: #1f2937;
+    border-bottom: 2px solid rgba(190, 18, 60, 0.16);
 }
 
 .automation-table th {
@@ -28,13 +37,26 @@
 }
 
 .automation-table tbody tr:hover {
-    background: #f9fafb;
+    background: #fff1f2;
 }
 
 .automation-table td {
     padding: 12px;
     font-size: 13px;
     vertical-align: middle;
+}
+
+.automation-table td i {
+    color: #9f1239;
+    font-size: 15px;
+}
+
+.automation-row-pin td:first-child {
+    border-left: 4px solid rgba(15, 118, 110, 0.35);
+}
+
+.automation-row-password td:first-child {
+    border-left: 4px solid rgba(185, 28, 28, 0.35);
 }
 
 .automation-checkbox {
@@ -78,9 +100,9 @@
     gap: 8px;
     flex-wrap: wrap;
     padding: 10px;
-    background: #f9fafb;
+    background: #ffffff;
     border-radius: 6px;
-    border: 1px solid #e5e7eb;
+    border: 1px solid rgba(190, 18, 60, 0.12);
 }
 
 .custom-range.hidden {
@@ -100,8 +122,8 @@
 
 .form-control-xs:focus, .form-control-sm:focus {
     outline: none;
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    border-color: #be123c;
+    box-shadow: 0 0 0 3px rgba(190, 18, 60, 0.1);
 }
 
 .custom-range span {
@@ -112,20 +134,24 @@
 
 /* Credentials Display Styling */
 .credentials-display {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border: none !important;
+    background: white;
+    border: 1px solid rgba(190, 18, 60, 0.14) !important;
+    border-top: 4px solid #be123c !important;
     border-radius: 12px !important;
     padding: 20px !important;
     margin-bottom: 24px !important;
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+    box-shadow: none;
 }
 
 .credentials-display h4 {
     margin: 0 0 16px 0 !important;
     font-size: 15px !important;
-    color: white !important;
+    color: #1f2937 !important;
     font-weight: 600 !important;
     letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .credentials-display .form-group {
@@ -135,7 +161,7 @@
 .credentials-display label {
     font-size: 11px !important;
     font-weight: 700 !important;
-    color: rgba(255, 255, 255, 0.9) !important;
+    color: #6b7280 !important;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     margin-bottom: 6px !important;
@@ -144,7 +170,7 @@
 
 .credentials-display .form-control {
     background: white !important;
-    border: 2px solid rgba(255, 255, 255, 0.3) !important;
+    border: 1px solid #d1d5db !important;
     border-radius: 8px !important;
     padding: 10px 14px !important;
     font-size: 14px !important;
@@ -156,8 +182,8 @@
 
 .credentials-display .form-control:focus {
     outline: none;
-    border-color: white !important;
-    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2), 0 2px 8px rgba(0, 0, 0, 0.15);
+    border-color: #be123c !important;
+    box-shadow: 0 0 0 3px rgba(190, 18, 60, 0.1);
 }
 
 .credentials-display .form-control[readonly] {

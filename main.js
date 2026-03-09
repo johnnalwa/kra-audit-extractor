@@ -225,10 +225,10 @@ ipcMain.handle('validate-kra-credentials', async (event, { company, downloadPath
 });
 
 // Password validation automation handler
-ipcMain.handle('run-password-validation', async (event, { company }) => {
+ipcMain.handle('run-password-validation', async (event, { company, downloadPath }) => {
   try {
     const { runPasswordValidation } = require('./automations/password-validation');
-    return await runPasswordValidation(company, (progress) => {
+    return await runPasswordValidation(company, downloadPath, (progress) => {
       mainWindow.webContents.send('automation-progress', progress);
     });
   } catch (error) {
@@ -277,6 +277,23 @@ ipcMain.handle('run-all-automations', async (event, { company, selectedAutomatio
   try {
     const { runAllAutomations } = require('./automations/run-all-automations');
     return await runAllAutomations(company, selectedAutomations, vatDateRange, whVatDateRange, downloadPath, (progress) => {
+      mainWindow.webContents.send('automation-progress', progress);
+    });
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+});
+
+// PIN-only batch handler
+ipcMain.handle('run-pin-only-batch', async (event, { companies, selectedAutomations, downloadPath, browserSettings }) => {
+  try {
+    const { runPinOnlyBatch } = require('./automations/pin-only-batch-runner');
+    const normalizedCompanies = (companies || []).map((company) => ({
+      ...company,
+      browserSettings: company.browserSettings || browserSettings || {}
+    }));
+
+    return await runPinOnlyBatch(normalizedCompanies, selectedAutomations, downloadPath, (progress) => {
       mainWindow.webContents.send('automation-progress', progress);
     });
   } catch (error) {

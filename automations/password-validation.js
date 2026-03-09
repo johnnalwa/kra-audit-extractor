@@ -5,6 +5,7 @@ const path = require('path');
 const fs = require('fs').promises;
 const os = require('os');
 const { solveArithmetic, withCaptchaRetry, hasArithmeticError } = require('./captcha-retry-helper');
+const { getBrowserLaunchOptions } = require('./browser-launch-options');
 
 // KRA API Headers - Comprehensive browser-like headers
 const KRA_API_HEADERS = {
@@ -24,7 +25,7 @@ const KRA_API_HEADERS = {
     'sec-ch-ua-platform': '"Windows"'
 };
 
-async function validateKRACredentials(pin, password, companyName, progressCallback) {
+async function validateKRACredentials(pin, password, companyName, progressCallback, browserOptions = {}) {
     let browser = null;
     let context = null;
     let page = null;
@@ -37,11 +38,9 @@ async function validateKRACredentials(pin, password, companyName, progressCallba
         });
 
         // Launch browser
-        browser = await chromium.launch({
-            headless: false,
-            channel: "chrome",
+        browser = await chromium.launch(getBrowserLaunchOptions(browserOptions, {
             args: ['--no-sandbox', '--disable-setuid-sandbox']
-        });
+        }));
 
         context = await browser.newContext();
         page = await context.newPage();
@@ -288,7 +287,7 @@ async function checkLoginStatus(page) {
     return { status: "Unknown", message: "Unable to determine login status" };
 }
 
-async function runPasswordValidation(company, progressCallback) {
+async function runPasswordValidation(company, downloadPath, progressCallback) {
     try {
         progressCallback({
             stage: 'Password Validation Report',
@@ -299,12 +298,12 @@ async function runPasswordValidation(company, progressCallback) {
         // Create download folder
         const now = new Date();
         const formattedDateTime = `${now.getDate()}.${now.getMonth() + 1}.${now.getFullYear()}`;
-        const downloadPath = path.join(require('os').homedir(), 'Downloads', `KRA-PASSWORD-VALIDATION-${formattedDateTime}`);
-        await fs.mkdir(downloadPath, { recursive: true });
+        const reportDownloadPath = downloadPath || path.join(require('os').homedir(), 'Downloads', `KRA-PASSWORD-VALIDATION-${formattedDateTime}`);
+        await fs.mkdir(reportDownloadPath, { recursive: true });
 
         progressCallback({
             progress: 20,
-            log: `Download folder created: ${downloadPath}`
+            log: `Download folder created: ${reportDownloadPath}`
         });
 
         // Validate credentials
@@ -318,7 +317,8 @@ async function runPasswordValidation(company, progressCallback) {
                     ...progress,
                     progress: 20 + (progress.progress || 0) * 0.6 // 20-80% range
                 });
-            }
+            },
+            company
         );
 
         progressCallback({
@@ -423,7 +423,7 @@ async function runPasswordValidation(company, progressCallback) {
 
         // Save Excel file
         const fileName = `PASSWORD_VALIDATION_${company.pin}_${formattedDateTime}.xlsx`;
-        const filePath = path.join(downloadPath, fileName);
+        const filePath = path.join(reportDownloadPath, fileName);
         await workbook.xlsx.writeFile(filePath);
 
         progressCallback({
@@ -436,7 +436,8 @@ async function runPasswordValidation(company, progressCallback) {
             success: true,
             result: validationResult,
             files: [fileName],
-            downloadPath: downloadPath
+            filePath: filePath,
+            downloadPath: reportDownloadPath
         };
 
     } catch (error) {
@@ -528,7 +529,8 @@ async function validateAndExportToConsolidated(company, downloadPath, progressCa
             company.pin, 
             company.password, 
             company.name, 
-            progressCallback
+            progressCallback,
+            company
         );
         
         progressCallback({ log: 'Adding validation result to consolidated report...' });

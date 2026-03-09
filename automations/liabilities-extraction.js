@@ -5,6 +5,7 @@ const os = require("os");
 const ExcelJS = require("exceljs");
 const { createWorker } = require('tesseract.js');
 const SharedWorkbookManager = require('./shared-workbook-manager');
+const { getBrowserLaunchOptions } = require('./browser-launch-options');
 
 // KRA API Headers - Comprehensive browser-like headers
 const KRA_API_HEADERS = {
@@ -202,7 +203,7 @@ async function runLiabilitiesExtraction(company, downloadPath, progressCallback)
 
     let browser = null;
     try {
-        browser = await chromium.launch({ headless: false, channel: "chrome" });
+        browser = await chromium.launch(getBrowserLaunchOptions(company));
         const context = await browser.newContext();
         const page = await context.newPage();
         page.setDefaultNavigationTimeout(180000);

@@ -3,6 +3,8 @@ const { createWorker } = require('tesseract.js');
 const fs = require('fs').promises;
 const path = require('path');
 const os = require('os');
+const SharedWorkbookManager = require('./shared-workbook-manager');
+const { getBrowserLaunchOptions } = require('./browser-launch-options');
 
 // KRA API Headers - Comprehensive browser-like headers
 const KRA_API_HEADERS = {
@@ -342,6 +344,52 @@ async function extractAgentDetails(page) {
     }
 }
 
+async function exportAgentStatusToSheet(workbookManager, results) {
+    const worksheet = workbookManager.addWorksheet('Withholding Agent Status');
+
+    workbookManager.addTitleRow(
+        worksheet,
+        'Withholding Agent Status Report',
+        `Checked: ${new Date(results.timestamp).toLocaleString()}`
+    );
+    workbookManager.addCompanyInfoRow(worksheet);
+    workbookManager.addHeaderRow(worksheet, ['Agent Type', 'Status', 'CAPTCHA Retries', 'Message']);
+
+    const rows = [
+        [
+            'VAT Withholding Agent',
+            results.vat?.isRegistered === true ? 'Registered' : results.vat?.isRegistered === false ? 'Not Registered' : 'Unknown',
+            results.vat?.captchaRetries || 0,
+            results.vat?.message || results.vat?.error || 'No response'
+        ],
+        [
+            'Rent Income Withholding Agent',
+            results.rent?.isRegistered === true ? 'Registered' : results.rent?.isRegistered === false ? 'Not Registered' : 'Unknown',
+            results.rent?.captchaRetries || 0,
+            results.rent?.message || results.rent?.error || 'No response'
+        ]
+    ];
+
+    workbookManager.addDataRows(worksheet, rows);
+
+    const detailsRows = [];
+    if (results.vat?.details?.confirmedPin || results.rent?.details?.confirmedPin) {
+        detailsRows.push(['Confirmed PIN', results.vat?.details?.confirmedPin || results.rent?.details?.confirmedPin || 'N/A']);
+    }
+    if (results.vat?.details?.taxpayerName || results.rent?.details?.taxpayerName) {
+        detailsRows.push(['Taxpayer Name', results.vat?.details?.taxpayerName || results.rent?.details?.taxpayerName || 'N/A']);
+    }
+
+    if (detailsRows.length > 0) {
+        worksheet.addRow([]);
+        workbookManager.addHeaderRow(worksheet, ['Detail', 'Value']);
+        workbookManager.addDataRows(worksheet, detailsRows);
+    }
+
+    workbookManager.autoFitColumns(worksheet);
+    return worksheet;
+}
+
 /**
  * Main function to check withholding agent status for a single company
  */
@@ -361,16 +409,14 @@ async function checkCompanyWithholdingStatus(company, downloadPath, progressCall
     }
 
     // Launch browser with Chrome channel
-    const browser = await chromium.launch({
-        headless: false,
-        channel: 'chrome',
+    const browser = await chromium.launch(getBrowserLaunchOptions(company, {
         args: [
             '--disable-blink-features=AutomationControlled',
             '--no-sandbox',
             '--disable-setuid-sandbox',
             '--disable-dev-shm-usage'
         ]
-    });
+    }));
 
     const context = await browser.newContext({
         userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
@@ -439,9 +485,31 @@ async function checkCompanyWithholdingStatus(company, downloadPath, progressCall
             });
         }
 
+        let savedWorkbook = null;
+        if (downloadPath) {
+            if (progressCallback) {
+                progressCallback({
+                    status: 'processing',
+                    message: 'Saving Excel report...'
+                });
+            }
+
+            const workbookManager = new SharedWorkbookManager(
+                { ...company, name: companyName },
+                downloadPath
+            );
+            await workbookManager.initialize();
+            await exportAgentStatusToSheet(workbookManager, results);
+            savedWorkbook = await workbookManager.save();
+        }
+
         return {
             success: true,
-            data: results
+            data: results,
+            filePath: savedWorkbook?.filePath,
+            fileName: savedWorkbook?.fileName,
+            companyFolder: savedWorkbook?.companyFolder,
+            files: savedWorkbook ? [savedWorkbook.fileName] : []
         };
 
     } catch (error) {
@@ -469,6 +537,7 @@ async function checkCompanyWithholdingStatus(company, downloadPath, progressCall
 // Export for use in Electron app
 module.exports = {
     checkCompanyWithholdingStatus,
+    exportAgentStatusToSheet,
     AGENT_TYPES,
     CONFIG
 };

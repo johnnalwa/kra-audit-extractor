@@ -3,6 +3,7 @@ const ExcelJS = require('exceljs');
 const path = require('path');
 const fs = require('fs').promises;
 const SharedWorkbookManager = require('./shared-workbook-manager');
+const { getBrowserLaunchOptions } = require('./browser-launch-options');
 const { createWorker } = require('tesseract.js');
 const fetch = require('./electron-fetch-wrapper');  // Use Electron-safe fetch wrapper
 
@@ -34,7 +35,7 @@ async function runDirectorDetailsExtraction(company, downloadPath, progressCallb
 
     let browser = null;
     try {
-        browser = await chromium.launch({ headless: false, channel: 'chrome' });
+        browser = await chromium.launch(getBrowserLaunchOptions(company));
         const context = await browser.newContext();
         const page = await context.newPage();
         page.setDefaultTimeout(60000); // 60 seconds timeout

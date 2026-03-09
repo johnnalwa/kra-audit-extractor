@@ -5,6 +5,7 @@ const path = require('path');
 const fs = require('fs').promises;
 const os = require('os');
 const SharedWorkbookManager = require('./shared-workbook-manager');
+const { getBrowserLaunchOptions } = require('./browser-launch-options');
 
 // KRA API Headers - Comprehensive browser-like headers
 const KRA_API_HEADERS = {
@@ -46,11 +47,9 @@ async function runLedgerExtraction(company, downloadPath, progressCallback) {
         });
 
         // Launch browser
-        browser = await chromium.launch({
-            headless: false,
-            channel: "chrome",
+        browser = await chromium.launch(getBrowserLaunchOptions(company, {
             args: ['--no-sandbox', '--disable-setuid-sandbox']
-        });
+        }));
 
         context = await browser.newContext();
         page = await context.newPage();

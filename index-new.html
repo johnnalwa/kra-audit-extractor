@@ -7,156 +7,153 @@
     <link rel="stylesheet" href="styles-new.css" />
     <link rel="stylesheet" href="toast-styles.css" />
     <link rel="stylesheet" href="automation-table-styles.css" />
+    <link rel="stylesheet" href="node_modules/@fortawesome/fontawesome-free/css/all.min.css" />
   </head>
   <body>
     <div class="app-container">
-      <!-- Sidebar Navigation -->
       <aside class="sidebar">
         <div class="sidebar-header">
           <div class="logo">
-            <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
-              <rect width="32" height="32" rx="8" fill="#667eea" />
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+              <rect width="32" height="32" rx="8" fill="#be123c" />
               <path d="M10 16L14 20L22 12" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
             <span>POST PORTUM</span>
           </div>
         </div>
-
         <nav class="sidebar-nav">
           <div class="nav-section">
-            <div class="nav-section-title">SETUP</div>
-            <button class="nav-item active" data-tab="company-setup">
-              <span class="nav-icon">🏢</span> <span class="nav-label">Company Setup</span>
-            </button>
-            <button class="nav-item" data-tab="password-validation">
-              <span class="nav-icon">🔐</span> <span class="nav-label">Validation</span>
-            </button>
+            <div class="nav-section-title">Setup</div>
+            <button class="nav-item active" data-tab="company-setup"><span class="nav-icon"><i class="fa-solid fa-building"></i></span><span class="nav-label">Company Setup</span></button>
+            <button class="nav-item" data-tab="password-validation"><span class="nav-icon"><i class="fa-solid fa-shield-halved"></i></span><span class="nav-label">Validation</span></button>
           </div>
-
           <div class="nav-section">
-            <div class="nav-section-title">OVERVIEW</div>
-            <button class="nav-item" data-tab="full-profile">
-              <span class="nav-icon">📊</span> <span class="nav-label">Full Profile</span> <span class="nav-badge">New</span>
-            </button>
+            <div class="nav-section-title">Overview</div>
+            <button class="nav-item" data-tab="full-profile"><span class="nav-icon"><i class="fa-solid fa-table-columns"></i></span><span class="nav-label">Full Profile</span><span class="nav-badge">New</span></button>
           </div>
-
           <div class="nav-section">
-            <div class="nav-section-title">EXTRACTIONS</div>
-            <button class="nav-item" data-tab="manufacturer-details">
-              <span class="nav-icon">📋</span> <span class="nav-label">Manufacturer Details</span>
-            </button>
-            <button class="nav-item" data-tab="director-details">
-              <span class="nav-icon">👔</span> <span class="nav-label">Director Details</span>
-            </button>
-            <button class="nav-item" data-tab="obligation-checker">
-              <span class="nav-icon">📝</span> <span class="nav-label">Obligations</span>
-            </button>
-            <button class="nav-item" data-tab="agent-checker">
-              <span class="nav-icon">🔍</span> <span class="nav-label">Agent Status</span>
-            </button>
-            <button class="nav-item" data-tab="liabilities">
-              <span class="nav-icon">💰</span> <span class="nav-label">Liabilities</span>
-            </button>
-            <button class="nav-item" data-tab="vat-returns">
-              <span class="nav-icon">📊</span> <span class="nav-label">VAT Returns</span>
-            </button>
-            <button class="nav-item" data-tab="wh-vat-returns">
-              <span class="nav-icon">🧾</span> <span class="nav-label">WH VAT Returns</span>
-            </button>
-            <button class="nav-item" data-tab="general-ledger">
-              <span class="nav-icon">📖</span> <span class="nav-label">General Ledger</span>
-            </button>
-            <button class="nav-item" data-tab="tax-compliance">
-              <span class="nav-icon">✅</span> <span class="nav-label">Tax Compliance</span>
-            </button>
+            <div class="nav-section-title">Extractions</div>
+            <button class="nav-item" data-tab="manufacturer-details"><span class="nav-icon"><i class="fa-solid fa-file-lines"></i></span><span class="nav-label">Manufacturer Details</span></button>
+            <button class="nav-item" data-tab="director-details"><span class="nav-icon"><i class="fa-solid fa-users-line"></i></span><span class="nav-label">Director Details</span></button>
+            <button class="nav-item" data-tab="obligation-checker"><span class="nav-icon"><i class="fa-solid fa-list-check"></i></span><span class="nav-label">Obligations</span></button>
+            <button class="nav-item" data-tab="agent-checker"><span class="nav-icon"><i class="fa-solid fa-user-shield"></i></span><span class="nav-label">Agent Status</span></button>
+            <button class="nav-item" data-tab="liabilities"><span class="nav-icon"><i class="fa-solid fa-money-check-dollar"></i></span><span class="nav-label">Liabilities</span></button>
+            <button class="nav-item" data-tab="vat-returns"><span class="nav-icon"><i class="fa-solid fa-receipt"></i></span><span class="nav-label">VAT Returns</span></button>
+            <button class="nav-item" data-tab="wh-vat-returns"><span class="nav-icon"><i class="fa-solid fa-file-invoice-dollar"></i></span><span class="nav-label">WH VAT Returns</span></button>
+            <button class="nav-item" data-tab="general-ledger"><span class="nav-icon"><i class="fa-solid fa-book-open"></i></span><span class="nav-label">General Ledger</span></button>
+            <button class="nav-item" data-tab="tax-compliance"><span class="nav-icon"><i class="fa-solid fa-certificate"></i></span><span class="nav-label">Tax Compliance</span></button>
           </div>
-
           <div class="nav-section">
-            <div class="nav-section-title">AUTOMATION</div>
-            <button class="nav-item" data-tab="all-automations">
-              <span class="nav-icon">⚡</span> <span class="nav-label">Run All</span>
-            </button>
+            <div class="nav-section-title">Automation</div>
+            <button class="nav-item" data-tab="all-automations"><span class="nav-icon"><i class="fa-solid fa-bolt"></i></span><span class="nav-label">Run All</span></button>
           </div>
         </nav>
-
         <div class="sidebar-footer">
           <div class="folder-location">
             <div class="folder-info">
-              <span class="folder-icon">📁</span>
+              <span class="folder-icon"><i class="fa-solid fa-folder-tree"></i></span>
               <div class="folder-text">
                 <div class="folder-label">Output Folder</div>
                 <div id="sidebarFolderPath" class="folder-path">Not set</div>
               </div>
             </div>
-            <button id="openFolderBtn" class="folder-open-btn" title="Open folder location">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                <path
-                  d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zM9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2.5A1 1 0 0 1 9.5 3z"
-                />
-              </svg>
-            </button>
+            <button id="openFolderBtn" class="folder-open-btn" title="Open output folder" type="button"><i class="fa-solid fa-arrow-up-right-from-square"></i></button>
           </div>
-          <button id="settingsBtn" class="settings-btn"><span>⚙️</span> <span>Settings</span></button>
+          <button id="settingsBtn" class="settings-btn" type="button"><span class="nav-icon"><i class="fa-solid fa-sliders"></i></span><span>Settings</span></button>
         </div>
       </aside>
 
-      <!-- Toast Container -->
       <div id="toastContainer" class="toast-container"></div>
 
-      <!-- Settings Modal -->
       <div id="settingsModal" class="modal hidden">
         <div class="modal-content">
           <div class="modal-header">
-            <h2>⚙️ Settings</h2>
-            <button class="modal-close" id="closeSettingsModal">×</button>
+            <h2><i class="fa-solid fa-sliders"></i> Settings</h2>
+            <button class="modal-close" id="closeSettingsModal" type="button">&times;</button>
           </div>
           <div class="modal-body">
             <div class="settings-section">
               <h3>Output Folder</h3>
-              <p class="settings-description">Choose where exported files will be saved</p>
+              <p class="settings-description">Excel exports and downloaded files are saved here.</p>
               <div class="folder-selector">
-                <input
-                  type="text"
-                  id="settingsDownloadPath"
-                  class="form-control"
-                  readonly
-                  placeholder="Select output folder..."
-                />
-                <button id="selectOutputFolder" class="btn btn-secondary"><span>📁</span> Browse</button>
+                <input type="text" id="settingsDownloadPath" class="form-control" readonly placeholder="Select output folder" />
+                <button id="selectOutputFolder" class="btn btn-secondary" type="button"><span class="btn-icon"><i class="fa-solid fa-folder-open"></i></span>Browse</button>
               </div>
               <div class="folder-info"><small>Default: Downloads/KRA POST PORTUM TOOL</small></div>
             </div>
-
             <div class="settings-section">
-              <h3>Output Format</h3>
-              <p class="settings-description">Choose the file format for exports</p>
-              <select id="settingsOutputFormat" class="form-control">
-                <option value="xlsx">Excel (.xlsx)</option>
-                <option value="csv">CSV (.csv)</option>
-                <option value="json">JSON (.json)</option>
+              <h3>Browser Mode</h3>
+              <p class="settings-description">Choose whether Playwright opens a visible browser window.</p>
+              <select id="settingsBrowserMode" class="form-control">
+                <option value="guided">Show browser window</option>
+                <option value="headless">Run headless</option>
               </select>
+              <div class="folder-info"><small>Use the visible browser when you want to observe login or CAPTCHA steps.</small></div>
             </div>
-
             <div class="settings-section">
-              <h3>About</h3>
-              <p class="settings-description">KRA POST PORTUM TOOL v1.0.0</p>
-              <p class="settings-description">Professional KRA data extraction and audit tool</p>
+              <h3>Exports</h3>
+              <p class="settings-description">All section reports are saved as Excel workbooks. VAT extraction also creates a JSON support file.</p>
+              <input type="hidden" id="settingsOutputFormat" value="combined" />
             </div>
           </div>
           <div class="modal-footer">
-            <button id="saveSettings" class="btn btn-primary"><span>💾</span> Save Settings</button>
-            <button id="cancelSettings" class="btn btn-ghost">Cancel</button>
+            <button id="saveSettings" class="btn btn-primary" type="button"><span class="btn-icon"><i class="fa-solid fa-floppy-disk"></i></span>Save Settings</button>
+            <button id="cancelSettings" class="btn btn-ghost" type="button">Cancel</button>
           </div>
         </div>
       </div>
 
-      <!-- Main Content Area -->
+      <div id="pinOnlyBatchModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="pinOnlyBatchTitle">
+        <div id="pinOnlyBatchOverlay" class="modal-overlay"></div>
+        <div class="modal-content modal-content-wide">
+          <div class="modal-header">
+            <h2 id="pinOnlyBatchTitle"><i class="fa-solid fa-layer-group"></i> PIN-Only Batch Run</h2>
+            <button class="modal-close" id="closePinOnlyBatchModal" type="button">&times;</button>
+          </div>
+          <div class="modal-body modal-body-wide batch-modal-body">
+            <div class="batch-input-panel">
+              <div class="info-banner info-banner-muted">
+                <span class="info-banner-icon"><i class="fa-solid fa-circle-info"></i></span>
+                <div>
+                  <strong>No password required</strong>
+                  <p>Paste one PIN per line or import a CSV, then run the selected PIN-only automations. Each company is saved separately and the combined workbook is generated at the end.</p>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="batchPinList">Company List</label>
+                <textarea id="batchPinList" class="form-input batch-textarea" placeholder="Paste one PIN per line or use PIN,Company Name"></textarea>
+              </div>
+              <input type="file" id="batchCsvFile" class="hidden" accept=".csv,.txt" />
+              <div class="button-group batch-actions">
+                <button id="importBatchCsv" class="btn btn-secondary" type="button"><span class="btn-icon"><i class="fa-solid fa-file-import"></i></span>Import CSV</button>
+                <button id="clearBatchPins" class="btn btn-ghost" type="button"><span class="btn-icon"><i class="fa-solid fa-trash-can"></i></span>Clear List</button>
+              </div>
+              <p id="batchPinListSummary" class="action-hint"></p>
+              <p id="runPinOnlyBatchHint" class="action-hint"></p>
+            </div>
+            <div id="pinOnlyBatchProgressCard" class="progress-card batch-progress-card hidden">
+              <div class="progress-header">
+                <h4 id="batchProgressText">PIN-Only Batch Progress</h4>
+                <span id="batchProgressPercentage" class="progress-percentage">0%</span>
+              </div>
+              <div class="progress-bar"><div id="batchProgressFill" class="progress-fill"></div></div>
+              <p id="batchProgressStage" class="progress-text">Waiting to start.</p>
+              <div id="batchProgressLog" class="progress-log batch-progress-log"></div>
+            </div>
+            <div id="pinOnlyBatchResults" class="result-section hidden"></div>
+          </div>
+          <div class="modal-footer">
+            <button id="runPinOnlyBatch" class="btn btn-primary" type="button" disabled><span class="btn-icon"><i class="fa-solid fa-play"></i></span>Run PIN-Only Batch</button>
+            <button id="closePinOnlyBatchDialog" class="btn btn-ghost" type="button">Close</button>
+          </div>
+        </div>
+      </div>
+
       <main class="main-content">
-        <!-- Page Header -->
         <header class="page-header">
           <div class="header-left">
             <h1 id="pageTitle">Company Setup</h1>
-            <p class="page-description" id="pageDescription">Enter your KRA credentials to get started</p>
+            <p class="page-description" id="pageDescription">Enter the KRA PIN first. Only login-protected sections need a password.</p>
           </div>
           <div id="companyBadge" class="company-badge hidden">
             <div class="badge-content">
@@ -166,7 +163,6 @@
           </div>
         </header>
 
-        <!-- Progress Section (TOP) -->
         <div id="progressSection" class="progress-section-top hidden">
           <div class="progress-card-top">
             <div class="progress-header">
@@ -178,93 +174,111 @@
           </div>
         </div>
 
-        <!-- Content Area -->
         <div class="content-area">
-          <!-- Step 1: Company Setup -->
           <div id="company-setup" class="tab-content active">
             <div class="card">
-              <div class="card-header"><h3>Enter Company Credentials</h3></div>
+              <div class="card-header">
+                <div>
+                  <h3>Company Setup</h3>
+                  <p class="section-subtitle">PIN-only sections can run without a password. Login-protected sections use the password field.</p>
+                </div>
+                <div class="section-tags">
+                  <span class="section-tag section-tag-info">PIN required</span>
+                  <span class="section-tag">Password optional here</span>
+                </div>
+              </div>
               <div class="card-body">
                 <div class="form-grid">
                   <div class="form-group">
                     <label for="kraPin">KRA PIN</label>
-                    <input type="text" id="kraPin" class="form-input" placeholder="e.g., P051766288C" required />
+                    <input type="text" id="kraPin" class="form-input" placeholder="e.g. P051766288C" />
                   </div>
-
                   <div class="form-group">
                     <label for="kraPassword">Password</label>
-                    <input type="password" id="kraPassword" class="form-input" placeholder="Enter password" required />
+                    <input type="password" id="kraPassword" class="form-input" placeholder="Leave blank unless you will run login-protected sections" />
                   </div>
                 </div>
-
                 <div class="button-group">
-                  <button id="fetchCompanyDetails" class="btn btn-primary">
-                    <span class="btn-icon">🏢</span> Get Company Details
-                  </button>
-                  <button id="validateCredentials" class="btn btn-secondary">
-                    <span class="btn-icon">🔐</span> Validate Login
-                  </button>
+                  <button id="fetchCompanyDetails" class="btn btn-primary" type="button"><span class="btn-icon"><i class="fa-solid fa-building"></i></span>Get Company Details</button>
+                  <button id="validateCredentials" class="btn btn-secondary" type="button"><span class="btn-icon"><i class="fa-solid fa-shield-halved"></i></span>Validate Login</button>
+                </div>
+                <p id="fetchCompanyDetailsHint" class="action-hint"></p>
+                <p id="validateCredentialsHint" class="action-hint"></p>
+                <div class="capability-panel">
+                  <div class="capability-column">
+                    <h4><i class="fa-solid fa-key"></i> Require PIN Only</h4>
+                    <table class="data-table compact-table">
+                      <thead><tr><th>Section</th><th>Output</th></tr></thead>
+                      <tbody>
+                        <tr><td>Company Details</td><td>Excel sheet</td></tr>
+                        <tr><td>Manufacturer Details</td><td>Excel sheet</td></tr>
+                        <tr><td>Obligation Check</td><td>Excel sheet</td></tr>
+                        <tr><td>Agent Status</td><td>Excel sheet</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="capability-column">
+                    <h4><i class="fa-solid fa-lock"></i> Require PIN and Password</h4>
+                    <table class="data-table compact-table">
+                      <thead><tr><th>Section</th><th>Output</th></tr></thead>
+                      <tbody>
+                        <tr><td>Validation</td><td>Excel sheet</td></tr>
+                        <tr><td>Director Details</td><td>Excel sheet</td></tr>
+                        <tr><td>Liabilities</td><td>Excel sheet</td></tr>
+                        <tr><td>VAT Returns</td><td>Excel workbook</td></tr>
+                        <tr><td>WH VAT Returns</td><td>Excel workbook</td></tr>
+                        <tr><td>General Ledger</td><td>Excel workbook</td></tr>
+                        <tr><td>Tax Compliance</td><td>Downloaded file</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>
-
             <div id="companyDetailsResult" class="card hidden">
-              <div class="card-header"><h3>Company Information</h3></div>
+              <div class="card-header"><div><h3>Company Information</h3><p class="section-subtitle">Fetched company data and the latest export link appear below.</p></div></div>
               <div class="card-body">
                 <div id="companyInfo" class="info-display"></div>
-                <button id="confirmCompanyDetails" class="btn btn-success">
-                  <span class="btn-icon">✓</span> Confirm & Continue
-                </button>
+                <div class="button-group">
+                  <button id="confirmCompanyDetails" class="btn btn-success" type="button"><span class="btn-icon"><i class="fa-solid fa-check"></i></span>Confirm and Continue</button>
+                </div>
               </div>
             </div>
           </div>
 
-          <!-- Step 2: Password Validation -->
           <div id="password-validation" class="tab-content">
             <div class="card">
-              <div class="card-header"><h3>Credential Validation</h3></div>
+              <div class="card-header">
+                <div><h3>Credential Validation</h3><p class="section-subtitle">Recommended before password-based extractions, but not required for PIN-only checks.</p></div>
+                <div class="section-tags"><span class="section-tag section-tag-warning">PIN and password</span><span class="section-tag">Excel export</span></div>
+              </div>
               <div class="card-body">
                 <div class="stats-grid">
-                  <div class="stat-card">
-                    <div class="stat-label">Company</div>
-                    <div id="validationCompanyName" class="stat-value">-</div>
-                  </div>
-                  <div class="stat-card">
-                    <div class="stat-label">PIN</div>
-                    <div id="validationPIN" class="stat-value">-</div>
-                  </div>
-                  <div class="stat-card">
-                    <div class="stat-label">Status</div>
-                    <div id="validationResult" class="stat-value">-</div>
-                  </div>
+                  <div class="stat-card"><div class="stat-label">Company</div><div id="validationCompanyName" class="stat-value">-</div></div>
+                  <div class="stat-card"><div class="stat-label">PIN</div><div id="validationPIN" class="stat-value">-</div></div>
+                  <div class="stat-card"><div class="stat-label">Status</div><div id="validationResult" class="stat-value">-</div></div>
                 </div>
-
                 <div class="button-group">
-                  <button id="runPasswordValidation" class="btn btn-primary" disabled>
-                    <span class="btn-icon">🔐</span> Run Validation
-                  </button>
+                  <button id="runPasswordValidation" class="btn btn-primary" type="button" disabled><span class="btn-icon"><i class="fa-solid fa-shield-halved"></i></span>Run Validation</button>
                 </div>
+                <p id="runPasswordValidationHint" class="action-hint"></p>
+                <div id="validationExportInfo" class="result-section"></div>
               </div>
             </div>
           </div>
 
-          <!-- Full Profile Tab (NEW) -->
           <div id="full-profile" class="tab-content">
             <div id="profileEmptyState" class="empty-state">
-              <div class="empty-icon">📊</div>
+              <div class="empty-icon"><i class="fa-solid fa-table-columns"></i></div>
               <h3>No Data Available</h3>
-              <p>Run extractions to see company profile data here</p>
-              <button class="btn btn-primary" onclick="document.querySelector('[data-tab=&quot;company-setup&quot;]').click()">
-                Start Setup
-              </button>
+              <p>Run a section to start building the company profile.</p>
+              <button class="btn btn-primary" type="button" onclick="document.querySelector('[data-tab=&quot;company-setup&quot;]').click()">Start Setup</button>
             </div>
-
             <div id="profileDataView" class="profile-view hidden">
-              <!-- Company Overview Card -->
               <div class="card profile-card">
                 <div class="card-header">
                   <h3>Company Overview</h3>
-                  <button id="refreshProfileBtn" class="btn btn-sm btn-ghost"><span>🔄</span> Refresh</button>
+                  <button id="refreshProfileBtn" class="btn btn-sm btn-ghost" type="button"><span class="btn-icon"><i class="fa-solid fa-rotate"></i></span>Refresh</button>
                 </div>
                 <div class="card-body">
                   <div class="profile-header">
@@ -280,132 +294,30 @@
                   </div>
                 </div>
               </div>
-
-              <!-- Data Grid -->
               <div class="profile-grid">
-                <!-- Manufacturer Details -->
-                <div class="card" id="profileManufacturerCard">
-                  <div class="card-header">
-                    <h4>Business Details</h4>
-                    <span class="status-dot status-pending"></span>
-                  </div>
-                  <div class="card-body">
-                    <div id="profileManufacturerData" class="profile-data"><p class="empty-text">Not extracted</p></div>
-                  </div>
-                </div>
-
-                <!-- Obligations -->
-                <div class="card" id="profileObligationsCard">
-                  <div class="card-header">
-                    <h4>Tax Obligations</h4>
-                    <span class="status-dot status-pending"></span>
-                  </div>
-                  <div class="card-body">
-                    <div id="profileObligationsData" class="profile-data"><p class="empty-text">Not extracted</p></div>
-                  </div>
-                </div>
-
-                <!-- Liabilities -->
-                <div class="card" id="profileLiabilitiesCard">
-                  <div class="card-header">
-                    <h4>Liabilities Summary</h4>
-                    <span class="status-dot status-pending"></span>
-                  </div>
-                  <div class="card-body">
-                    <div id="profileLiabilitiesData" class="profile-data"><p class="empty-text">Not extracted</p></div>
-                  </div>
-                </div>
-
-                <!-- VAT Returns -->
-                <div class="card" id="profileVatCard">
-                  <div class="card-header">
-                    <h4>VAT Returns</h4>
-                    <span class="status-dot status-pending"></span>
-                  </div>
-                  <div class="card-body">
-                    <div id="profileVatData" class="profile-data"><p class="empty-text">Not extracted</p></div>
-                  </div>
-                </div>
-
-                <!-- Agent Status -->
-                <div class="card" id="profileAgentCard">
-                  <div class="card-header">
-                    <h4>Withholding Agent Status</h4>
-                    <span class="status-dot status-pending"></span>
-                  </div>
-                  <div class="card-body">
-                    <div id="profileAgentData" class="profile-data"><p class="empty-text">Not checked</p></div>
-                  </div>
-                </div>
-
-                <!-- Director Details -->
-                <div class="card" id="profileDirectorCard">
-                  <div class="card-header">
-                    <h4>Director Details</h4>
-                    <span class="status-dot status-pending"></span>
-                  </div>
-                  <div class="card-body">
-                    <div id="profileDirectorData" class="profile-data"><p class="empty-text">Not extracted</p></div>
-                  </div>
-                </div>
-
-                <!-- Withholding VAT -->
-                <div class="card" id="profileWhVatCard">
-                  <div class="card-header">
-                    <h4>Withholding VAT</h4>
-                    <span class="status-dot status-pending"></span>
-                  </div>
-                  <div class="card-body">
-                    <div id="profileWhVatData" class="profile-data"><p class="empty-text">Not extracted</p></div>
-                  </div>
-                </div>
-
-                <!-- General Ledger -->
-                <div class="card" id="profileLedgerCard">
-                  <div class="card-header">
-                    <h4>General Ledger</h4>
-                    <span class="status-dot status-pending"></span>
-                  </div>
-                  <div class="card-body">
-                    <div id="profileLedgerData" class="profile-data"><p class="empty-text">Not extracted</p></div>
-                  </div>
-                </div>
-
-                <!-- TCC -->
-                <div class="card" id="profileTccCard">
-                  <div class="card-header">
-                    <h4>Tax Compliance Certificate</h4>
-                    <span class="status-dot status-pending"></span>
-                  </div>
-                  <div class="card-body">
-                    <div id="profileTccData" class="profile-data"><p class="empty-text">Not downloaded</p></div>
-                  </div>
-                </div>
-
-                <!-- Files -->
-                <div class="card" id="profileFilesCard">
-                  <div class="card-header">
-                    <h4>Generated Files</h4>
-                    <button id="openFilesFolder" class="btn btn-sm btn-ghost"><span>📁</span> Open Folder</button>
-                  </div>
-                  <div class="card-body">
-                    <div id="profileFilesData" class="profile-files"><p class="empty-text">No files generated</p></div>
-                  </div>
-                </div>
+                <div class="card" id="profileManufacturerCard"><div class="card-header"><h4>Business Details</h4><span class="status-dot status-pending"></span></div><div class="card-body"><div id="profileManufacturerData" class="profile-data"><p class="empty-text">Not extracted</p></div></div></div>
+                <div class="card" id="profileObligationsCard"><div class="card-header"><h4>Tax Obligations</h4><span class="status-dot status-pending"></span></div><div class="card-body"><div id="profileObligationsData" class="profile-data"><p class="empty-text">Not extracted</p></div></div></div>
+                <div class="card" id="profileLiabilitiesCard"><div class="card-header"><h4>Liabilities Summary</h4><span class="status-dot status-pending"></span></div><div class="card-body"><div id="profileLiabilitiesData" class="profile-data"><p class="empty-text">Not extracted</p></div></div></div>
+                <div class="card" id="profileVatCard"><div class="card-header"><h4>VAT Returns</h4><span class="status-dot status-pending"></span></div><div class="card-body"><div id="profileVatData" class="profile-data"><p class="empty-text">Not extracted</p></div></div></div>
+                <div class="card" id="profileAgentCard"><div class="card-header"><h4>Withholding Agent Status</h4><span class="status-dot status-pending"></span></div><div class="card-body"><div id="profileAgentData" class="profile-data"><p class="empty-text">Not checked</p></div></div></div>
+                <div class="card" id="profileDirectorCard"><div class="card-header"><h4>Director Details</h4><span class="status-dot status-pending"></span></div><div class="card-body"><div id="profileDirectorData" class="profile-data"><p class="empty-text">Not extracted</p></div></div></div>
+                <div class="card" id="profileWhVatCard"><div class="card-header"><h4>Withholding VAT</h4><span class="status-dot status-pending"></span></div><div class="card-body"><div id="profileWhVatData" class="profile-data"><p class="empty-text">Not extracted</p></div></div></div>
+                <div class="card" id="profileLedgerCard"><div class="card-header"><h4>General Ledger</h4><span class="status-dot status-pending"></span></div><div class="card-body"><div id="profileLedgerData" class="profile-data"><p class="empty-text">Not extracted</p></div></div></div>
+                <div class="card" id="profileTccCard"><div class="card-header"><h4>Tax Compliance Certificate</h4><span class="status-dot status-pending"></span></div><div class="card-body"><div id="profileTccData" class="profile-data"><p class="empty-text">Not downloaded</p></div></div></div>
+                <div class="card" id="profileFilesCard"><div class="card-header"><h4>Generated Files</h4><button id="openFilesFolder" class="btn btn-sm btn-ghost" type="button"><span class="btn-icon"><i class="fa-solid fa-folder-open"></i></span>Open Folder</button></div><div class="card-body"><div id="profileFilesData" class="profile-files"><p class="empty-text">No files generated</p></div></div></div>
               </div>
             </div>
           </div>
 
-          <!-- Other tabs (keeping structure minimal for now) -->
           <div id="manufacturer-details" class="tab-content">
             <div class="card">
-              <div class="card-header"><h3>Manufacturer Details</h3></div>
+              <div class="card-header"><div><h3>Manufacturer Details</h3><p class="section-subtitle">PIN-only section. Fetches business registration details and saves them to Excel.</p></div><div class="section-tags"><span class="section-tag section-tag-info">PIN only</span><span class="section-tag">Excel export</span></div></div>
               <div class="card-body">
                 <div class="button-group">
-                  <button id="fetchManufacturerDetails" class="btn btn-primary" disabled>
-                    <span class="btn-icon">📋</span> Fetch Details
-                  </button>
+                  <button id="fetchManufacturerDetails" class="btn btn-primary" type="button" disabled><span class="btn-icon"><i class="fa-solid fa-file-lines"></i></span>Fetch Details</button>
+                  <button id="exportManufacturerDetails" class="btn btn-secondary hidden" type="button"><span class="btn-icon"><i class="fa-solid fa-file-excel"></i></span>Export Excel</button>
                 </div>
+                <p id="fetchManufacturerDetailsHint" class="action-hint"></p>
                 <div id="manufacturerDetailsResult" class="result-section hidden"><div id="manufacturerInfo"></div></div>
               </div>
             </div>
@@ -413,13 +325,10 @@
 
           <div id="director-details" class="tab-content">
             <div class="card">
-              <div class="card-header"><h3>Director Details Extraction</h3></div>
+              <div class="card-header"><div><h3>Director Details</h3><p class="section-subtitle">Login-protected section for directors, associates, and economic activity details.</p></div><div class="section-tags"><span class="section-tag section-tag-warning">PIN and password</span><span class="section-tag">Excel export</span></div></div>
               <div class="card-body">
-                <div class="button-group">
-                  <button id="runDirectorDetailsExtraction" class="btn btn-primary" disabled>
-                    <span class="btn-icon">👔</span> Extract Director Details
-                  </button>
-                </div>
+                <div class="button-group"><button id="runDirectorDetailsExtraction" class="btn btn-primary" type="button" disabled><span class="btn-icon"><i class="fa-solid fa-users-line"></i></span>Extract Director Details</button></div>
+                <p id="runDirectorDetailsExtractionHint" class="action-hint"></p>
                 <div id="directorDetailsResults" class="result-section hidden"></div>
               </div>
             </div>
@@ -427,13 +336,10 @@
 
           <div id="obligation-checker" class="tab-content">
             <div class="card">
-              <div class="card-header"><h3>Obligation Checker</h3></div>
+              <div class="card-header"><div><h3>Obligation Checker</h3><p class="section-subtitle">PIN-only section for obligation and registration status checks.</p></div><div class="section-tags"><span class="section-tag section-tag-info">PIN only</span><span class="section-tag">Excel export</span></div></div>
               <div class="card-body">
-                <div class="button-group">
-                  <button id="runObligationCheck" class="btn btn-primary" disabled>
-                    <span class="btn-icon">📝</span> Run Obligation Check
-                  </button>
-                </div>
+                <div class="button-group"><button id="runObligationCheck" class="btn btn-primary" type="button" disabled><span class="btn-icon"><i class="fa-solid fa-list-check"></i></span>Run Obligation Check</button></div>
+                <p id="runObligationCheckHint" class="action-hint"></p>
                 <div id="obligationResults" class="result-section hidden"></div>
               </div>
             </div>
@@ -441,20 +347,11 @@
 
           <div id="agent-checker" class="tab-content">
             <div class="card">
-              <div class="card-header"><h3>Withholding Agent Checker</h3></div>
+              <div class="card-header"><div><h3>Withholding Agent Checker</h3><p class="section-subtitle">PIN-only section for VAT and Rent Income withholding-agent verification.</p></div><div class="section-tags"><span class="section-tag section-tag-info">PIN only</span><span class="section-tag">Excel export</span></div></div>
               <div class="card-body">
-                <div class="alert alert-info">
-                  <p><strong>What this checks:</strong></p>
-                  <ul>
-                    <li>✓ VAT Withholding Agent status</li>
-                    <li>✓ Rent Income Withholding Agent status</li>
-                  </ul>
-                </div>
-                <div class="button-group">
-                  <button id="runAgentCheck" class="btn btn-primary" disabled>
-                    <span class="btn-icon">🔍</span> Check Agent Status
-                  </button>
-                </div>
+                <div class="info-banner"><span class="info-banner-icon"><i class="fa-solid fa-circle-info"></i></span><div><strong>This check covers</strong><p>VAT withholding-agent status and Rent Income withholding-agent status.</p></div></div>
+                <div class="button-group"><button id="runAgentCheck" class="btn btn-primary" type="button" disabled><span class="btn-icon"><i class="fa-solid fa-user-shield"></i></span>Check Agent Status</button></div>
+                <p id="runAgentCheckHint" class="action-hint"></p>
                 <div id="agentCheckResults" class="result-section hidden"></div>
               </div>
             </div>
@@ -462,174 +359,51 @@
 
           <div id="liabilities" class="tab-content">
             <div class="card">
-              <div class="card-header"><h3>Liabilities Extraction</h3></div>
+              <div class="card-header"><div><h3>Liabilities Extraction</h3><p class="section-subtitle">Login-protected section for outstanding liabilities and balance summaries.</p></div><div class="section-tags"><span class="section-tag section-tag-warning">PIN and password</span><span class="section-tag">Excel export</span></div></div>
               <div class="card-body">
-                <div class="button-group">
-                  <button id="runLiabilitiesExtraction" class="btn btn-primary" disabled>
-                    <span class="btn-icon">💰</span> Extract Liabilities
-                  </button>
-                </div>
+                <div class="button-group"><button id="runLiabilitiesExtraction" class="btn btn-primary" type="button" disabled><span class="btn-icon"><i class="fa-solid fa-money-check-dollar"></i></span>Extract Liabilities</button></div>
+                <p id="runLiabilitiesExtractionHint" class="action-hint"></p>
                 <div id="liabilitiesResults" class="result-section hidden"></div>
               </div>
             </div>
           </div>
-
           <div id="vat-returns" class="tab-content">
             <div class="card">
-              <div class="card-header"><h3>VAT Returns</h3></div>
+              <div class="card-header"><div><h3>VAT Returns</h3><p class="section-subtitle">Login-protected section. Results and exported files are shown in tables below.</p></div><div class="section-tags"><span class="section-tag section-tag-warning">PIN and password</span><span class="section-tag">Excel workbook</span></div></div>
               <div class="card-body">
                 <div class="option-group">
-                  <label class="radio-card">
-                    <input type="radio" name="vatDateRange" value="all" checked />
-                    <div class="radio-content"><strong>All Data</strong> <small>Extract everything available</small></div>
-                  </label>
-
-                  <label class="radio-card">
-                    <input type="radio" name="vatDateRange" value="custom" />
-                    <div class="radio-content"><strong>Custom Range</strong> <small>Specify date range</small></div>
-                  </label>
+                  <label class="radio-card"><input type="radio" name="vatDateRange" value="all" checked /><div class="radio-content"><strong>All Data</strong><small>Extract every available VAT return.</small></div></label>
+                  <label class="radio-card"><input type="radio" name="vatDateRange" value="custom" /><div class="radio-content"><strong>Custom Range</strong><small>Limit extraction to a selected date range.</small></div></label>
                 </div>
-
                 <div id="vatCustomDateInputs" class="custom-date-inputs hidden">
                   <div class="date-row">
-                    <div class="form-group">
-                      <label>From</label>
-                      <div class="date-group">
-                        <select id="vatStartMonth" class="form-input">
-                          <option value="1">Jan</option>
-                          <option value="2">Feb</option>
-                          <option value="3">Mar</option>
-                          <option value="4">Apr</option>
-                          <option value="5">May</option>
-                          <option value="6">Jun</option>
-                          <option value="7">Jul</option>
-                          <option value="8">Aug</option>
-                          <option value="9">Sep</option>
-                          <option value="10">Oct</option>
-                          <option value="11">Nov</option>
-                          <option value="12">Dec</option>
-                        </select>
-                        <input type="number" id="vatStartYear" class="form-input" min="2010" max="2030" value="2024" />
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label>To</label>
-                      <div class="date-group">
-                        <select id="vatEndMonth" class="form-input">
-                          <option value="1">Jan</option>
-                          <option value="2">Feb</option>
-                          <option value="3">Mar</option>
-                          <option value="4">Apr</option>
-                          <option value="5">May</option>
-                          <option value="6">Jun</option>
-                          <option value="7">Jul</option>
-                          <option value="8">Aug</option>
-                          <option value="9">Sep</option>
-                          <option value="10">Oct</option>
-                          <option value="11">Nov</option>
-                          <option value="12" selected>Dec</option>
-                        </select>
-                        <input type="number" id="vatEndYear" class="form-input" min="2010" max="2030" value="2024" />
-                      </div>
-                    </div>
+                    <div class="form-group"><label for="vatStartMonth">From</label><div class="date-group"><select id="vatStartMonth" class="form-input"><option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option><option value="5">May</option><option value="6">Jun</option><option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option></select><input type="number" id="vatStartYear" class="form-input" min="2010" max="2035" value="2024" /></div></div>
+                    <div class="form-group"><label for="vatEndMonth">To</label><div class="date-group"><select id="vatEndMonth" class="form-input"><option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option><option value="5">May</option><option value="6">Jun</option><option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12" selected>Dec</option></select><input type="number" id="vatEndYear" class="form-input" min="2010" max="2035" value="2024" /></div></div>
                   </div>
                 </div>
-
-                <div class="button-group">
-                  <button id="runVATExtraction" class="btn btn-primary" disabled>
-                    <span class="btn-icon">📊</span> Extract VAT Data
-                  </button>
-                </div>
-
+                <div class="button-group"><button id="runVATExtraction" class="btn btn-primary" type="button" disabled><span class="btn-icon"><i class="fa-solid fa-receipt"></i></span>Extract VAT Data</button></div>
+                <p id="runVATExtractionHint" class="action-hint"></p>
                 <div id="vatResults" class="result-section hidden"></div>
               </div>
             </div>
           </div>
 
-          <!-- WH VAT Returns Tab -->
           <div id="wh-vat-returns" class="tab-content">
             <div class="card">
-              <div class="card-header"><h3>Withholding VAT Returns</h3></div>
+              <div class="card-header"><div><h3>Withholding VAT Returns</h3><p class="section-subtitle">Login-protected section with tabular results and file actions after extraction.</p></div><div class="section-tags"><span class="section-tag section-tag-warning">PIN and password</span><span class="section-tag">Excel workbook</span></div></div>
               <div class="card-body">
                 <div class="option-group">
-                  <label class="radio-card">
-                    <input type="radio" name="whVatDateRange" value="all" checked />
-                    <div class="radio-content"><strong>All Data</strong> <small>Extract everything available</small></div>
-                  </label>
-
-                  <label class="radio-card">
-                    <input type="radio" name="whVatDateRange" value="custom" />
-                    <div class="radio-content"><strong>Custom Range</strong> <small>Specify date range</small></div>
-                  </label>
+                  <label class="radio-card"><input type="radio" name="whVatDateRange" value="all" checked /><div class="radio-content"><strong>All Data</strong><small>Extract every available withholding VAT period.</small></div></label>
+                  <label class="radio-card"><input type="radio" name="whVatDateRange" value="custom" /><div class="radio-content"><strong>Custom Range</strong><small>Limit extraction to selected months.</small></div></label>
                 </div>
-
                 <div id="whVatCustomDateInputs" class="custom-date-inputs hidden">
                   <div class="date-row">
-                    <div class="form-group">
-                      <label>From</label>
-                      <div class="date-group">
-                        <select id="whVatStartMonth" class="form-input">
-                          <option value="1" selected>Jan</option>
-                          <option value="2">Feb</option>
-                          <option value="3">Mar</option>
-                          <option value="4">Apr</option>
-                          <option value="5">May</option>
-                          <option value="6">Jun</option>
-                          <option value="7">Jul</option>
-                          <option value="8">Aug</option>
-                          <option value="9">Sep</option>
-                          <option value="10">Oct</option>
-                          <option value="11">Nov</option>
-                          <option value="12">Dec</option>
-                        </select>
-                        <input
-                          type="number"
-                          id="whVatStartYear"
-                          class="form-input"
-                          min="2010"
-                          max="2030"
-                          value="2025"
-                          placeholder="2025"
-                        />
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label>To</label>
-                      <div class="date-group">
-                        <select id="whVatEndMonth" class="form-input">
-                          <option value="1">Jan</option>
-                          <option value="2">Feb</option>
-                          <option value="3">Mar</option>
-                          <option value="4">Apr</option>
-                          <option value="5">May</option>
-                          <option value="6">Jun</option>
-                          <option value="7">Jul</option>
-                          <option value="8">Aug</option>
-                          <option value="9">Sep</option>
-                          <option value="10">Oct</option>
-                          <option value="11">Nov</option>
-                          <option value="12" selected>Dec</option>
-                        </select>
-                        <input
-                          type="number"
-                          id="whVatEndYear"
-                          class="form-input"
-                          min="2010"
-                          max="2030"
-                          value="2025"
-                          placeholder="2025"
-                        />
-                      </div>
-                    </div>
+                    <div class="form-group"><label for="whVatStartMonth">From</label><div class="date-group"><select id="whVatStartMonth" class="form-input"><option value="1" selected>Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option><option value="5">May</option><option value="6">Jun</option><option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option></select><input type="number" id="whVatStartYear" class="form-input" min="2010" max="2035" value="2025" /></div></div>
+                    <div class="form-group"><label for="whVatEndMonth">To</label><div class="date-group"><select id="whVatEndMonth" class="form-input"><option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option><option value="5">May</option><option value="6">Jun</option><option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12" selected>Dec</option></select><input type="number" id="whVatEndYear" class="form-input" min="2010" max="2035" value="2025" /></div></div>
                   </div>
                 </div>
-
-                <div class="button-group">
-                  <button id="runWhVATExtraction" class="btn btn-primary" disabled>
-                    <span class="btn-icon">🧾</span> Extract WH VAT Data
-                  </button>
-                </div>
-
+                <div class="button-group"><button id="runWhVATExtraction" class="btn btn-primary" type="button" disabled><span class="btn-icon"><i class="fa-solid fa-file-invoice-dollar"></i></span>Extract WH VAT Data</button></div>
+                <p id="runWhVATExtractionHint" class="action-hint"></p>
                 <div id="whVatResults" class="result-section hidden"></div>
               </div>
             </div>
@@ -637,13 +411,10 @@
 
           <div id="general-ledger" class="tab-content">
             <div class="card">
-              <div class="card-header"><h3>General Ledger</h3></div>
+              <div class="card-header"><div><h3>General Ledger</h3><p class="section-subtitle">Login-protected section. Saved workbooks and transaction tables appear after extraction.</p></div><div class="section-tags"><span class="section-tag section-tag-warning">PIN and password</span><span class="section-tag">Excel workbook</span></div></div>
               <div class="card-body">
-                <div class="button-group">
-                  <button id="runLedgerExtraction" class="btn btn-primary" disabled>
-                    <span class="btn-icon">📖</span> Extract Ledger
-                  </button>
-                </div>
+                <div class="button-group"><button id="runLedgerExtraction" class="btn btn-primary" type="button" disabled><span class="btn-icon"><i class="fa-solid fa-book-open"></i></span>Extract Ledger</button></div>
+                <p id="runLedgerExtractionHint" class="action-hint"></p>
                 <div id="ledgerResults" class="result-section hidden"></div>
               </div>
             </div>
@@ -651,13 +422,10 @@
 
           <div id="tax-compliance" class="tab-content">
             <div class="card">
-              <div class="card-header"><h3>Tax Compliance Certificate Downloader</h3></div>
+              <div class="card-header"><div><h3>Tax Compliance Certificate</h3><p class="section-subtitle">Login-protected section. Downloads the latest certificate and shows the file actions below.</p></div><div class="section-tags"><span class="section-tag section-tag-warning">PIN and password</span><span class="section-tag">Downloaded file</span></div></div>
               <div class="card-body">
-                <div class="button-group">
-                  <button id="runTCCDownloader" class="btn btn-primary" disabled>
-                    <span class="btn-icon">✅</span> Download TCC
-                  </button>
-                </div>
+                <div class="button-group"><button id="runTCCDownloader" class="btn btn-primary" type="button" disabled><span class="btn-icon"><i class="fa-solid fa-certificate"></i></span>Download TCC</button></div>
+                <p id="runTCCDownloaderHint" class="action-hint"></p>
                 <div id="tccResults" class="result-section hidden"></div>
               </div>
             </div>
@@ -665,244 +433,60 @@
 
           <div id="all-automations" class="tab-content">
             <div class="card">
-              <div class="card-header"><h3>Run All Automations</h3></div>
+              <div class="card-header"><div><h3>Run All Automations</h3><p class="section-subtitle">Select the sections you want. PIN-only tasks can run without a password.</p></div></div>
               <div class="card-body">
-                <!-- Credentials Display Section -->
                 <div class="credentials-display">
-                  <h4>📋 Current Credentials</h4>
-                  <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
-                    <div class="form-group">
-                      <label for="runAllPinDisplay">KRA PIN</label>
-                      <input type="text" id="runAllPinDisplay" class="form-control" readonly />
-                    </div>
-                    <div class="form-group">
-                      <label for="runAllPasswordDisplay">Password</label>
-                      <input type="password" id="runAllPasswordDisplay" class="form-control" readonly />
-                    </div>
-                    <div class="form-group">
-                      <label for="runAllCompanyDisplay">Company Name</label>
-                      <input type="text" id="runAllCompanyDisplay" class="form-control" readonly />
-                    </div>
+                  <h4><i class="fa-solid fa-id-card"></i> Current Credentials</h4>
+                  <div class="credentials-grid">
+                    <div class="form-group"><label for="runAllPinDisplay">KRA PIN</label><input type="text" id="runAllPinDisplay" class="form-control" readonly /></div>
+                    <div class="form-group"><label for="runAllPasswordDisplay">Password</label><input type="password" id="runAllPasswordDisplay" class="form-control" readonly /></div>
+                    <div class="form-group"><label for="runAllCompanyDisplay">Company Name</label><input type="text" id="runAllCompanyDisplay" class="form-control" readonly /></div>
                   </div>
                 </div>
-
+                <div class="info-banner info-banner-muted"><span class="info-banner-icon"><i class="fa-solid fa-circle-info"></i></span><div><strong>Requirement guide</strong><p>PIN-only rows can run as soon as a PIN is available. Password-protected rows will be skipped if you do not add the password.</p></div></div>
+                <div class="batch-launch-panel">
+                  <div>
+                    <h4>PIN-Only Batch Run</h4>
+                    <p class="section-subtitle">Open the dialog to paste PINs or import a CSV, then run the selected PIN-only automations for the full list.</p>
+                  </div>
+                  <button id="openPinOnlyBatchDialog" class="btn btn-secondary" type="button"><span class="btn-icon"><i class="fa-solid fa-layer-group"></i></span>Open Batch Dialog</button>
+                </div>
+                <div class="run-all-toolbar">
+                  <div class="button-group run-all-filters">
+                    <button id="selectPinOnlyAutomations" class="btn btn-secondary btn-sm" type="button"><span class="btn-icon"><i class="fa-solid fa-key"></i></span>PIN Only</button>
+                    <button id="selectPasswordAutomations" class="btn btn-ghost btn-sm" type="button"><span class="btn-icon"><i class="fa-solid fa-lock"></i></span>Password Only</button>
+                    <button id="clearAutomations" class="btn btn-ghost btn-sm" type="button"><span class="btn-icon"><i class="fa-solid fa-xmark"></i></span>Clear</button>
+                  </div>
+                  <p id="runAllSelectionSummary" class="run-all-summary">No automation selected yet.</p>
+                </div>
                 <div class="automation-table-container">
                   <table class="automation-table">
-                    <thead>
-                      <tr>
-                        <th style="width: 50px;"><input type="checkbox" id="selectAllAutomations" checked /></th>
-                        <th style="width: 50px;"></th>
-                        <th style="width: 200px;">Automation</th>
-                        <th>Description</th>
-                        <th style="width: 360px;">Date Range</th>
-                      </tr>
-                    </thead>
+                    <thead><tr><th style="width: 52px;"><input type="checkbox" id="selectAllAutomations" checked /></th><th style="width: 58px;">Icon</th><th style="width: 220px;">Automation</th><th style="width: 150px;">Requirement</th><th>Description</th><th style="width: 170px;">Output</th><th style="width: 360px;">Date Range</th></tr></thead>
                     <tbody>
-                      <tr>
-                        <td><input type="checkbox" class="automation-checkbox" id="includePasswordValidation" checked /></td>
-                        <td>🔐</td>
-                        <td><strong>Password Validation</strong></td>
-                        <td>Validate KRA credentials</td>
-                        <td><span class="date-na">N/A</span></td>
-                      </tr>
-                      <tr>
-                        <td><input type="checkbox" class="automation-checkbox" id="includeManufacturerDetails" checked /></td>
-                        <td>📋</td>
-                        <td><strong>Manufacturer Details</strong></td>
-                        <td>Fetch company information</td>
-                        <td><span class="date-na">N/A</span></td>
-                      </tr>
-                      <tr>
-                        <td><input type="checkbox" class="automation-checkbox" id="includeAgentStatus" checked /></td>
-                        <td>👤</td>
-                        <td><strong>Agent Status Check</strong></td>
-                        <td>Check withholding agent status</td>
-                        <td><span class="date-na">N/A</span></td>
-                      </tr>
-                      <tr>
-                        <td><input type="checkbox" class="automation-checkbox" id="includeObligationCheck" checked /></td>
-                        <td>📝</td>
-                        <td><strong>Obligation Check</strong></td>
-                        <td>Check tax obligations</td>
-                        <td><span class="date-na">N/A</span></td>
-                      </tr>
-                      <tr>
-                        <td><input type="checkbox" class="automation-checkbox" id="includeDirectorDetails" checked /></td>
-                        <td>👥</td>
-                        <td><strong>Director Details</strong></td>
-                        <td>Extract director information</td>
-                        <td><span class="date-na">N/A</span></td>
-                      </tr>
-                      <tr>
-                        <td><input type="checkbox" class="automation-checkbox" id="includeVATReturns" checked /></td>
-                        <td>📊</td>
-                        <td><strong>VAT Returns</strong></td>
-                        <td>Extract VAT returns data</td>
-                        <td>
-                          <div class="date-range-inputs">
-                            <select class="form-control-sm" id="vatRangeType">
-                              <option value="all">All Data</option>
-                              <option value="custom">Custom</option>
-                            </select>
-                            <div class="custom-range hidden" id="vatCustomRange">
-                              <input
-                                type="number"
-                                class="form-control-xs"
-                                placeholder="M"
-                                min="1"
-                                max="12"
-                                id="vatStartMonth"
-                              />
-                              <input
-                                type="number"
-                                class="form-control-xs"
-                                placeholder="YYYY"
-                                min="2000"
-                                max="2099"
-                                id="vatStartYear"
-                              />
-                              <span>to</span>
-                              <input type="number" class="form-control-xs" placeholder="M" min="1" max="12" id="vatEndMonth" />
-                              <input
-                                type="number"
-                                class="form-control-xs"
-                                placeholder="YYYY"
-                                min="2000"
-                                max="2099"
-                                id="vatEndYear"
-                              />
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td><input type="checkbox" class="automation-checkbox" id="includeWhVatReturns" checked /></td>
-                        <td>📈</td>
-                        <td><strong>WH VAT Returns</strong></td>
-                        <td>Withholding VAT data</td>
-                        <td>
-                          <div class="date-range-inputs">
-                            <select class="form-control-sm" id="whVatRangeType">
-                              <option value="all">All Data</option>
-                              <option value="custom">Custom</option>
-                            </select>
-                            <div class="custom-range hidden" id="whVatCustomRange">
-                              <input
-                                type="number"
-                                class="form-control-xs"
-                                placeholder="M"
-                                min="1"
-                                max="12"
-                                id="whVatStartMonth"
-                              />
-                              <input
-                                type="number"
-                                class="form-control-xs"
-                                placeholder="YYYY"
-                                min="2000"
-                                max="2099"
-                                id="whVatStartYear"
-                              />
-                              <span>to</span>
-                              <input
-                                type="number"
-                                class="form-control-xs"
-                                placeholder="M"
-                                min="1"
-                                max="12"
-                                id="whVatEndMonth"
-                              />
-                              <input
-                                type="number"
-                                class="form-control-xs"
-                                placeholder="YYYY"
-                                min="2000"
-                                max="2099"
-                                id="whVatEndYear"
-                              />
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td><input type="checkbox" class="automation-checkbox" id="includeGeneralLedger" checked /></td>
-                        <td>📖</td>
-                        <td><strong>General Ledger</strong></td>
-                        <td>Extract transaction ledger</td>
-                        <td><span class="date-na">N/A</span></td>
-                      </tr>
-                      <tr>
-                        <td><input type="checkbox" class="automation-checkbox" id="includeTaxCompliance" checked /></td>
-                        <td>📜</td>
-                        <td><strong>Tax Compliance Certificate</strong></td>
-                        <td>Download TCC certificate</td>
-                        <td><span class="date-na">N/A</span></td>
-                      </tr>
-                      <tr>
-                        <td><input type="checkbox" class="automation-checkbox" id="includeLiabilities" checked /></td>
-                        <td>💰</td>
-                        <td><strong>Liabilities</strong></td>
-                        <td>Extract liabilities data</td>
-                        <td><span class="date-na">N/A</span></td>
-                      </tr>
+                      <tr class="automation-row automation-row-password"><td><input type="checkbox" class="automation-checkbox" data-automation-key="passwordValidation" id="includePasswordValidation" checked /></td><td><i class="fa-solid fa-shield-halved"></i></td><td><strong>Password Validation</strong></td><td><span class="requirement-pill requirement-pill-password">PIN and password</span></td><td>Validate the KRA login before running protected sections.</td><td>Excel sheet</td><td><span class="date-na">Not applicable</span></td></tr>
+                      <tr class="automation-row automation-row-pin"><td><input type="checkbox" class="automation-checkbox" data-automation-key="manufacturerDetails" id="includeManufacturerDetails" checked /></td><td><i class="fa-solid fa-file-lines"></i></td><td><strong>Manufacturer Details</strong></td><td><span class="requirement-pill requirement-pill-pin">PIN only</span></td><td>Fetch company registration and business information.</td><td>Excel sheet</td><td><span class="date-na">Not applicable</span></td></tr>
+                      <tr class="automation-row automation-row-pin"><td><input type="checkbox" class="automation-checkbox" data-automation-key="agentStatus" id="includeAgentStatus" checked /></td><td><i class="fa-solid fa-user-shield"></i></td><td><strong>Agent Status Check</strong></td><td><span class="requirement-pill requirement-pill-pin">PIN only</span></td><td>Check VAT and Rent Income withholding-agent status.</td><td>Excel sheet</td><td><span class="date-na">Not applicable</span></td></tr>
+                      <tr class="automation-row automation-row-pin"><td><input type="checkbox" class="automation-checkbox" data-automation-key="obligationCheck" id="includeObligationCheck" checked /></td><td><i class="fa-solid fa-list-check"></i></td><td><strong>Obligation Check</strong></td><td><span class="requirement-pill requirement-pill-pin">PIN only</span></td><td>Check tax obligations, PIN status, and registration flags.</td><td>Excel sheet</td><td><span class="date-na">Not applicable</span></td></tr>
+                      <tr class="automation-row automation-row-password"><td><input type="checkbox" class="automation-checkbox" data-automation-key="directorDetails" id="includeDirectorDetails" checked /></td><td><i class="fa-solid fa-users-line"></i></td><td><strong>Director Details</strong></td><td><span class="requirement-pill requirement-pill-password">PIN and password</span></td><td>Extract directors, associates, and economic activities.</td><td>Excel sheet</td><td><span class="date-na">Not applicable</span></td></tr>
+                      <tr class="automation-row automation-row-password"><td><input type="checkbox" class="automation-checkbox" data-automation-key="vatReturns" id="includeVATReturns" checked /></td><td><i class="fa-solid fa-receipt"></i></td><td><strong>VAT Returns</strong></td><td><span class="requirement-pill requirement-pill-password">PIN and password</span></td><td>Extract VAT filed returns and save a workbook.</td><td>Excel workbook</td><td><div class="date-range-inputs"><select class="form-control-sm" id="runAllVatRangeType"><option value="all">All Data</option><option value="custom">Custom</option></select><div class="custom-range hidden" id="runAllVatCustomRange"><input type="number" class="form-control-xs" placeholder="M" min="1" max="12" id="runAllVatStartMonth" /><input type="number" class="form-control-xs" placeholder="YYYY" min="2000" max="2099" id="runAllVatStartYear" /><span>to</span><input type="number" class="form-control-xs" placeholder="M" min="1" max="12" id="runAllVatEndMonth" /><input type="number" class="form-control-xs" placeholder="YYYY" min="2000" max="2099" id="runAllVatEndYear" /></div></div></td></tr>
+                      <tr class="automation-row automation-row-password"><td><input type="checkbox" class="automation-checkbox" data-automation-key="whVatReturns" id="includeWhVatReturns" checked /></td><td><i class="fa-solid fa-file-invoice-dollar"></i></td><td><strong>WH VAT Returns</strong></td><td><span class="requirement-pill requirement-pill-password">PIN and password</span></td><td>Extract withholding VAT transactions by period.</td><td>Excel workbook</td><td><div class="date-range-inputs"><select class="form-control-sm" id="runAllWhVatRangeType"><option value="all">All Data</option><option value="custom">Custom</option></select><div class="custom-range hidden" id="runAllWhVatCustomRange"><input type="number" class="form-control-xs" placeholder="M" min="1" max="12" id="runAllWhVatStartMonth" /><input type="number" class="form-control-xs" placeholder="YYYY" min="2000" max="2099" id="runAllWhVatStartYear" /><span>to</span><input type="number" class="form-control-xs" placeholder="M" min="1" max="12" id="runAllWhVatEndMonth" /><input type="number" class="form-control-xs" placeholder="YYYY" min="2000" max="2099" id="runAllWhVatEndYear" /></div></div></td></tr>
+                      <tr class="automation-row automation-row-password"><td><input type="checkbox" class="automation-checkbox" data-automation-key="generalLedger" id="includeGeneralLedger" checked /></td><td><i class="fa-solid fa-book-open"></i></td><td><strong>General Ledger</strong></td><td><span class="requirement-pill requirement-pill-password">PIN and password</span></td><td>Extract the transaction ledger and save it to Excel.</td><td>Excel workbook</td><td><span class="date-na">Not applicable</span></td></tr>
+                      <tr class="automation-row automation-row-password"><td><input type="checkbox" class="automation-checkbox" data-automation-key="taxCompliance" id="includeTaxCompliance" checked /></td><td><i class="fa-solid fa-certificate"></i></td><td><strong>Tax Compliance Certificate</strong></td><td><span class="requirement-pill requirement-pill-password">PIN and password</span></td><td>Download the latest tax compliance certificate.</td><td>Certificate file</td><td><span class="date-na">Not applicable</span></td></tr>
+                      <tr class="automation-row automation-row-password"><td><input type="checkbox" class="automation-checkbox" data-automation-key="liabilities" id="includeLiabilities" checked /></td><td><i class="fa-solid fa-money-check-dollar"></i></td><td><strong>Liabilities</strong></td><td><span class="requirement-pill requirement-pill-password">PIN and password</span></td><td>Extract liabilities using both supported methods.</td><td>Excel workbook</td><td><span class="date-na">Not applicable</span></td></tr>
                     </tbody>
                   </table>
                 </div>
-
-                <div class="button-group" style="margin-top: 20px;">
-                  <button id="runAllAutomations" class="btn btn-primary btn-lg" disabled>
-                    <span class="btn-icon">⚡</span> Run Selected Automations
-                  </button>
-                </div>
+                <div class="button-group run-all-actions"><button id="runAllAutomations" class="btn btn-primary btn-lg" type="button" disabled><span class="btn-icon"><i class="fa-solid fa-bolt"></i></span>Run Selected Automations</button></div>
+                <p id="runAllAutomationsHint" class="action-hint"></p>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Global Progress Section -->
-        <div id="progressSection" class="progress-section hidden">
-          <div class="progress-card">
-            <div class="progress-header">
-              <h4>Processing...</h4>
-              <span id="progressPercentage" class="progress-percentage">0%</span>
-            </div>
-            <div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
-            <div id="progressText" class="progress-text">Initializing...</div>
-            <div id="progressLog" class="progress-log"></div>
-          </div>
-        </div>
+        <input type="hidden" id="downloadPath" />
+        <input type="hidden" id="outputFormat" value="combined" />
+        <input type="hidden" id="browserHeadless" value="false" />
       </main>
-    </div>
-
-    <!-- Settings Modal -->
-    <div id="settingsModal" class="modal hidden">
-      <div class="modal-overlay"></div>
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3>Settings</h3>
-          <button class="modal-close">&times;</button>
-        </div>
-        <div class="modal-body">
-          <div class="form-group">
-            <label for="downloadPath">Download Folder</label>
-            <div class="path-selector">
-              <input type="text" id="downloadPath" class="form-input" readonly placeholder="Select folder..." />
-              <button type="button" id="selectFolder" class="btn btn-secondary"><span>📁</span> Browse</button>
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="outputFormat">Output Format</label>
-            <select id="outputFormat" class="form-input">
-              <option value="individual">Individual Files</option>
-              <option value="combined">Combined Report</option>
-            </select>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button id="saveConfig" class="btn btn-primary">Save Settings</button>
-          <button id="closeModal" class="btn btn-secondary">Cancel</button>
-        </div>
-      </div>
     </div>
 
     <script src="renderer-new.js"></script>

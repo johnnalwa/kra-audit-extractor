@@ -5,6 +5,7 @@ const path = require('path');
 const fs = require('fs').promises;
 const SharedWorkbookManager = require('./shared-workbook-manager');
 const os = require('os');
+const { getBrowserLaunchOptions } = require('./browser-launch-options');
 
 // KRA API Headers - Comprehensive browser-like headers
 const KRA_API_HEADERS = {
@@ -34,11 +35,9 @@ async function runWhVatExtraction(company, dateRange, downloadPath, progressCall
         log: `Company folder: ${companyFolder}`
     });
 
-    const browser = await chromium.launch({
-        headless: false,
-        channel: 'chrome',
+    const browser = await chromium.launch(getBrowserLaunchOptions(company, {
         slowMo: 100
-    });
+    }));
 
     const context = await browser.newContext({
         viewport: { width: 1920, height: 1080 }

@@ -1,7 +1,9 @@
 const { chromium } = require("playwright");
 const { createWorker } = require('tesseract.js');
+const fs = require("fs").promises;
 const path = require("path");
 const os = require("os");
+const { getBrowserLaunchOptions } = require('./browser-launch-options');
 
 // KRA API Headers - Comprehensive browser-like headers
 const KRA_API_HEADERS = {
@@ -25,7 +27,7 @@ async function runObligationCheck(company, progressCallback) {
     let browser = null;
     try {
         progressCallback({ stage: 'Obligation Check', message: 'Starting obligation check...', progress: 5 });
-        browser = await chromium.launch({ headless: false, channel: "chrome" });
+        browser = await chromium.launch(getBrowserLaunchOptions(company));
         const context = await browser.newContext();
         const page = await context.newPage();
         await page.goto("https://itax.kra.go.ke/KRA-Portal/");
@@ -65,7 +67,10 @@ async function processCompanyData(company, page, progressCallback) {
 
             progressCallback({ log: 'Solving captcha...' });
             await page.waitForSelector("#captcha_img");
-            const imagePath = path.join(os.tmpdir(), "ocr_obligation.png");
+            const imagePath = path.join(
+                os.tmpdir(),
+                `ocr_obligation_${Date.now()}_${Math.random().toString(16).slice(2, 8)}.png`
+            );
             await page.locator("#captcha_img").first().screenshot({ path: imagePath });
 
             const worker = await createWorker('eng', 1);
@@ -90,6 +95,7 @@ async function processCompanyData(company, page, progressCallback) {
             }
 
             await worker.terminate();
+            await fs.unlink(imagePath).catch(() => {});
             
             progressCallback({
                 log: `CAPTCHA solved: ${numbers[0]} ${text.includes("+") ? "+" : "-"} ${numbers[1]} = ${result}`
