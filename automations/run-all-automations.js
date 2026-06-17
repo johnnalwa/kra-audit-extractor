@@ -8,6 +8,7 @@ const { runWhVatExtraction } = require('./wh-vat-extraction');
 const { runLedgerExtraction } = require('./ledger-extraction');
 const { runDirectorDetailsExtraction } = require('./director-details-extraction');
 const { runTCCDownloader } = require('./tax-compliance-downloader');
+const { runAssessmentDownloads } = require('./assessment-downloads');
 const SharedWorkbookManager = require('./shared-workbook-manager');
 
 const PASSWORD_REQUIRED = {
@@ -20,6 +21,7 @@ const PASSWORD_REQUIRED = {
     whVatReturns: true,
     generalLedger: true,
     taxCompliance: true,
+    assessmentDownloads: true,
     liabilities: true
 };
 
@@ -414,6 +416,38 @@ async function runAllAutomations(company, selectedAutomations, vatDateRange, whV
         // ── Execute both groups concurrently with each other ────────────────────
         // • loginTasks   → sequential (one at a time, same KRA session context)
         // • noLoginTasks → all in parallel (public APIs / PIN checker, no conflicts)
+        if (isSelected(selectedAutomations, 'assessmentDownloads') && ensurePasswordFor('assessmentDownloads', 'Assessment Downloads')) {
+            loginTasks.push(async () => {
+                try {
+                    progressCallback({
+                        stage: 'Assessment Downloads',
+                        message: 'Downloading assessment notices...',
+                        progress: Math.round((completedAutomations / totalAutomations) * 100)
+                    });
+
+                    const assessmentResult = await runAssessmentDownloads(
+                        company,
+                        {},
+                        mainDownloadPath,
+                        (data) => progressCallback({ ...data, stage: 'Assessment Downloads' })
+                    );
+
+                    if (assessmentResult.success) {
+                        results.successful.push('Assessment Downloads');
+                        pushFiles(results, assessmentResult.files, mainDownloadPath);
+                        updateProgress('Assessment Downloads', 'Completed');
+                    } else {
+                        results.failed.push({ name: 'Assessment Downloads', error: assessmentResult.error });
+                        updateProgress('Assessment Downloads', 'Failed');
+                    }
+                } catch (error) {
+                    console.error('Assessment Downloads Error:', error);
+                    results.failed.push({ name: 'Assessment Downloads', error: error.message });
+                    updateProgress('Assessment Downloads', 'Failed');
+                }
+            });
+        }
+
         progressCallback({
             stage: 'All Automations',
             message: `Starting ${loginTasks.length} login automation(s) sequentially + ${noLoginTasks.length} no-login automation(s) in parallel...`,

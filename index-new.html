@@ -42,6 +42,7 @@
             <button class="nav-item" data-tab="wh-vat-returns"><span class="nav-icon"><i class="fa-solid fa-file-invoice-dollar"></i></span><span class="nav-label">WH VAT Returns</span></button>
             <button class="nav-item" data-tab="general-ledger"><span class="nav-icon"><i class="fa-solid fa-book-open"></i></span><span class="nav-label">General Ledger</span></button>
             <button class="nav-item" data-tab="tax-compliance"><span class="nav-icon"><i class="fa-solid fa-certificate"></i></span><span class="nav-label">Tax Compliance</span></button>
+            <button class="nav-item" data-tab="assessment-downloads"><span class="nav-icon"><i class="fa-solid fa-file-arrow-down"></i></span><span class="nav-label">Assessments</span></button>
           </div>
           <div class="nav-section">
             <div class="nav-section-title">Automation</div>
@@ -235,6 +236,72 @@
                 </div>
               </div>
             </div>
+            <div class="card" id="batchSetupCard">
+              <div class="card-header">
+                <div>
+                  <h3>Batch Company Import</h3>
+                  <p class="section-subtitle">Download the template, fill in your companies, then import the CSV to set up a batch run.</p>
+                </div>
+                <div class="section-tags">
+                  <span class="section-tag section-tag-info">CSV import</span>
+                  <span class="section-tag">Batch ready</span>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="batch-setup-steps">
+                  <div class="batch-setup-step">
+                    <div class="step-badge">1</div>
+                    <div class="step-body">
+                      <h4>Download Template</h4>
+                      <p class="section-subtitle">Get a ready-to-fill CSV with PIN, Company Name, and Password columns.</p>
+                      <button id="downloadCsvTemplate" class="btn btn-secondary" type="button"><span class="btn-icon"><i class="fa-solid fa-file-arrow-down"></i></span>Download Template</button>
+                    </div>
+                  </div>
+                  <div class="batch-setup-step">
+                    <div class="step-badge">2</div>
+                    <div class="step-body">
+                      <h4>Import CSV</h4>
+                      <p class="section-subtitle">Fill in the template and import it here.</p>
+                      <input type="file" id="setupCsvFile" class="hidden" accept=".csv,.txt" />
+                      <div class="button-group">
+                        <button id="importSetupCsv" class="btn btn-secondary" type="button"><span class="btn-icon"><i class="fa-solid fa-file-import"></i></span>Import CSV</button>
+                        <button id="clearSetupCsv" class="btn btn-ghost hidden" type="button"><span class="btn-icon"><i class="fa-solid fa-trash-can"></i></span>Clear</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="batch-setup-step">
+                    <div class="step-badge">3</div>
+                    <div class="step-body">
+                      <h4>Parallel Workers</h4>
+                      <p class="section-subtitle">Number of companies to process at the same time.</p>
+                      <div class="worker-count-row">
+                        <button id="workerCountDown" class="btn btn-ghost btn-sm worker-count-btn" type="button"><i class="fa-solid fa-minus"></i></button>
+                        <input type="number" id="workerCount" class="form-input worker-count-input" min="1" max="20" value="10" />
+                        <button id="workerCountUp" class="btn btn-ghost btn-sm worker-count-btn" type="button"><i class="fa-solid fa-plus"></i></button>
+                        <span class="worker-count-label">workers</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div id="setupBatchPreview" class="hidden">
+                  <div class="info-banner info-banner-muted">
+                    <span class="info-banner-icon"><i class="fa-solid fa-users"></i></span>
+                    <p id="setupBatchSummary" class="action-hint" style="margin:0;"></p>
+                  </div>
+                  <div class="batch-preview-scroll">
+                    <table class="data-table compact-table">
+                      <thead><tr><th style="width:32px;">#</th><th>PIN</th><th>Company Name</th><th>Password</th></tr></thead>
+                      <tbody id="setupBatchTableBody"></tbody>
+                    </table>
+                  </div>
+                  <div class="button-group" style="margin-top:12px;">
+                    <button id="confirmBatchSetup" class="btn btn-success" type="button"><span class="btn-icon"><i class="fa-solid fa-check"></i></span>Use for Batch Run</button>
+                  </div>
+                </div>
+                <p id="setupBatchHint" class="action-hint">Download the template, fill it in, then import it.</p>
+              </div>
+            </div>
+
             <div id="companyDetailsResult" class="card hidden">
               <div class="card-header"><div><h3>Company Information</h3><p class="section-subtitle">Fetched company data and the latest export link appear below.</p></div></div>
               <div class="card-body">
@@ -431,11 +498,43 @@
             </div>
           </div>
 
+          <div id="assessment-downloads" class="tab-content">
+            <div class="card">
+              <div class="card-header"><div><h3>Assessment Downloads</h3><p class="section-subtitle">Login-protected section. Uses the current company setup only and saves assessment PDFs locally.</p></div><div class="section-tags"><span class="section-tag section-tag-warning">PIN and password</span><span class="section-tag">Local PDFs</span></div></div>
+              <div class="card-body">
+                <div class="info-banner info-banner-muted"><span class="info-banner-icon"><i class="fa-solid fa-circle-info"></i></span><div><strong>Local run only</strong><p>This section does not read from or write to the database. It uses the KRA PIN, password, and company name from Company Setup.</p></div></div>
+                <div class="automation-table-container">
+                  <table class="automation-table">
+                    <thead><tr><th style="width: 52px;">Use</th><th>Tax Obligation</th><th style="width: 120px;">Code</th></tr></thead>
+                    <tbody>
+                      <tr><td><input type="checkbox" class="assessment-obligation-checkbox" value="4" checked /></td><td>Income Tax - Company</td><td>4</td></tr>
+                      <tr><td><input type="checkbox" class="assessment-obligation-checkbox" value="9" checked /></td><td>Value Added Tax (VAT)</td><td>9</td></tr>
+                      <tr><td><input type="checkbox" class="assessment-obligation-checkbox" value="7" /></td><td>Income Tax - PAYE</td><td>7</td></tr>
+                      <tr><td><input type="checkbox" class="assessment-obligation-checkbox" value="33" /></td><td>Income Tax - Rent Income (MRI)</td><td>33</td></tr>
+                      <tr><td><input type="checkbox" class="assessment-obligation-checkbox" value="29" /></td><td>VAT - Withholding</td><td>29</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="button-group"><button id="runAssessmentDownloads" class="btn btn-primary" type="button" disabled><span class="btn-icon"><i class="fa-solid fa-file-arrow-down"></i></span>Download Assessments</button></div>
+                <p id="runAssessmentDownloadsHint" class="action-hint"></p>
+                <div id="assessmentDownloadsResults" class="result-section hidden"></div>
+              </div>
+            </div>
+          </div>
+
           <div id="all-automations" class="tab-content">
             <div class="card">
               <div class="card-header"><div><h3>Run All Automations</h3><p class="section-subtitle">Select the sections you want. PIN-only tasks can run without a password.</p></div></div>
               <div class="card-body">
-                <div class="credentials-display">
+                <div id="runAllBatchBanner" class="info-banner hidden">
+                  <span class="info-banner-icon"><i class="fa-solid fa-layer-group"></i></span>
+                  <div style="flex:1">
+                    <strong>Batch mode active</strong>
+                    <p id="runAllBatchBannerText">Companies loaded from CSV. Run All will process each company in sequence.</p>
+                  </div>
+                  <button id="clearBatchFromRunAll" class="btn btn-ghost btn-sm" type="button" style="flex-shrink:0;"><i class="fa-solid fa-xmark"></i> Clear batch</button>
+                </div>
+                <div id="runAllSinglePanel" class="credentials-display">
                   <h4><i class="fa-solid fa-id-card"></i> Current Credentials</h4>
                   <div class="credentials-grid">
                     <div class="form-group"><label for="runAllPinDisplay">KRA PIN</label><input type="text" id="runAllPinDisplay" class="form-control" readonly /></div>
@@ -472,6 +571,7 @@
                       <tr class="automation-row automation-row-password"><td><input type="checkbox" class="automation-checkbox" data-automation-key="whVatReturns" id="includeWhVatReturns" checked /></td><td><i class="fa-solid fa-file-invoice-dollar"></i></td><td><strong>WH VAT Returns</strong></td><td><span class="requirement-pill requirement-pill-password">PIN and password</span></td><td>Extract withholding VAT transactions by period.</td><td>Excel workbook</td><td><div class="date-range-inputs"><select class="form-control-sm" id="runAllWhVatRangeType"><option value="all">All Data</option><option value="custom">Custom</option></select><div class="custom-range hidden" id="runAllWhVatCustomRange"><input type="number" class="form-control-xs" placeholder="M" min="1" max="12" id="runAllWhVatStartMonth" /><input type="number" class="form-control-xs" placeholder="YYYY" min="2000" max="2099" id="runAllWhVatStartYear" /><span>to</span><input type="number" class="form-control-xs" placeholder="M" min="1" max="12" id="runAllWhVatEndMonth" /><input type="number" class="form-control-xs" placeholder="YYYY" min="2000" max="2099" id="runAllWhVatEndYear" /></div></div></td></tr>
                       <tr class="automation-row automation-row-password"><td><input type="checkbox" class="automation-checkbox" data-automation-key="generalLedger" id="includeGeneralLedger" checked /></td><td><i class="fa-solid fa-book-open"></i></td><td><strong>General Ledger</strong></td><td><span class="requirement-pill requirement-pill-password">PIN and password</span></td><td>Extract the transaction ledger and save it to Excel.</td><td>Excel workbook</td><td><span class="date-na">Not applicable</span></td></tr>
                       <tr class="automation-row automation-row-password"><td><input type="checkbox" class="automation-checkbox" data-automation-key="taxCompliance" id="includeTaxCompliance" checked /></td><td><i class="fa-solid fa-certificate"></i></td><td><strong>Tax Compliance Certificate</strong></td><td><span class="requirement-pill requirement-pill-password">PIN and password</span></td><td>Download the latest tax compliance certificate.</td><td>Certificate file</td><td><span class="date-na">Not applicable</span></td></tr>
+                      <tr class="automation-row automation-row-password"><td><input type="checkbox" class="automation-checkbox" data-automation-key="assessmentDownloads" id="includeAssessmentDownloads" checked /></td><td><i class="fa-solid fa-file-arrow-down"></i></td><td><strong>Assessment Downloads</strong></td><td><span class="requirement-pill requirement-pill-password">PIN and password</span></td><td>Download assessment notices from Consult and Reprint.</td><td>PDF files</td><td><span class="date-na">Not applicable</span></td></tr>
                       <tr class="automation-row automation-row-password"><td><input type="checkbox" class="automation-checkbox" data-automation-key="liabilities" id="includeLiabilities" checked /></td><td><i class="fa-solid fa-money-check-dollar"></i></td><td><strong>Liabilities</strong></td><td><span class="requirement-pill requirement-pill-password">PIN and password</span></td><td>Extract liabilities using both supported methods.</td><td>Excel workbook</td><td><span class="date-na">Not applicable</span></td></tr>
                     </tbody>
                   </table>

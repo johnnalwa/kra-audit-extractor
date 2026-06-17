@@ -284,8 +284,26 @@ ipcMain.handle('run-all-automations', async (event, { company, selectedAutomatio
   }
 });
 
+// Full batch handler — all automations, one folder, one consolidated Excel
+ipcMain.handle('run-all-automations-batch', async (event, { companies, selectedAutomations, vatDateRange, whVatDateRange, downloadPath, workerCount }) => {
+  try {
+    const { runBatchFullAutomations } = require('./automations/batch-full-runner');
+    return await runBatchFullAutomations(
+      companies,
+      selectedAutomations,
+      vatDateRange,
+      whVatDateRange,
+      downloadPath,
+      workerCount || 10,
+      (progress) => { mainWindow.webContents.send('automation-progress', progress); }
+    );
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+});
+
 // PIN-only batch handler
-ipcMain.handle('run-pin-only-batch', async (event, { companies, selectedAutomations, downloadPath, browserSettings }) => {
+ipcMain.handle('run-pin-only-batch', async (event, { companies, selectedAutomations, downloadPath, browserSettings, workerCount }) => {
   try {
     const { runPinOnlyBatch } = require('./automations/pin-only-batch-runner');
     const normalizedCompanies = (companies || []).map((company) => ({
@@ -295,10 +313,27 @@ ipcMain.handle('run-pin-only-batch', async (event, { companies, selectedAutomati
 
     return await runPinOnlyBatch(normalizedCompanies, selectedAutomations, downloadPath, (progress) => {
       mainWindow.webContents.send('automation-progress', progress);
-    });
+    }, workerCount || 10);
   } catch (error) {
     return { success: false, error: error.message };
   }
+});
+
+// Save CSV template to disk
+ipcMain.handle('save-csv-template', async (event, { defaultPath }) => {
+  const result = await dialog.showSaveDialog(mainWindow, {
+    title: 'Save CSV Template',
+    defaultPath: defaultPath || 'companies_template.csv',
+    filters: [{ name: 'CSV Files', extensions: ['csv'] }]
+  });
+
+  if (result.canceled || !result.filePath) {
+    return { success: false, canceled: true };
+  }
+
+  const csvContent = 'PIN,Company Name,Password\nP051766288C,Example Company Ltd,yourpassword\n';
+  fs.writeFileSync(result.filePath, csvContent, 'utf8');
+  return { success: true, filePath: result.filePath };
 });
 
 // Obligation checker handler (consolidated)
@@ -354,6 +389,18 @@ ipcMain.handle('run-tcc-downloader', async (event, { company, downloadPath }) =>
   try {
     const { runTCCDownloader } = require('./automations/tax-compliance-downloader');
     return await runTCCDownloader(company, downloadPath, (progress) => {
+      mainWindow.webContents.send('automation-progress', progress);
+    });
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+});
+
+// Assessment downloads handler
+ipcMain.handle('run-assessment-downloads', async (event, { company, options, downloadPath }) => {
+  try {
+    const { runAssessmentDownloads } = require('./automations/assessment-downloads');
+    return await runAssessmentDownloads(company, options || {}, downloadPath, (progress) => {
       mainWindow.webContents.send('automation-progress', progress);
     });
   } catch (error) {

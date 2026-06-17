@@ -12,7 +12,7 @@ const PIN_ONLY_LABELS = {
     agentStatus: 'Agent Status'
 };
 
-const MAX_PARALLEL_COMPANIES = 2;
+const DEFAULT_WORKER_COUNT = 10;
 
 function buildTimestamp() {
     const now = new Date();
@@ -350,7 +350,7 @@ async function processCompany({
     }
 }
 
-async function runPinOnlyBatch(companies, selectedAutomations, downloadPath, progressCallback = () => {}) {
+async function runPinOnlyBatch(companies, selectedAutomations, downloadPath, progressCallback = () => {}, workerCount = DEFAULT_WORKER_COUNT) {
     const pinOnlySelections = (selectedAutomations || []).filter((key) => PIN_ONLY_LABELS[key]);
     if (!companies?.length) {
         return { success: false, error: 'No companies were provided for the batch run.' };
@@ -374,13 +374,13 @@ async function runPinOnlyBatch(companies, selectedAutomations, downloadPath, pro
     const obligationRows = new Array(companies.length).fill(null);
     const agentRows = new Array(companies.length).fill(null);
     const savedFiles = new Array(companies.length).fill('');
-    const workerCount = Math.max(1, Math.min(MAX_PARALLEL_COMPANIES, companies.length));
+    const resolvedWorkerCount = Math.max(1, Math.min(Math.round(workerCount) || DEFAULT_WORKER_COUNT, companies.length));
     let nextIndex = 0;
 
     progressCallback({
         stage: 'PIN-Only Batch',
-        message: `Starting batch processing for ${companies.length} company PINs with ${workerCount} parallel worker${workerCount === 1 ? '' : 's'}.`,
-        log: `PIN-Only Batch: using ${workerCount} parallel worker${workerCount === 1 ? '' : 's'}.`,
+        message: `Starting batch processing for ${companies.length} company PINs with ${resolvedWorkerCount} parallel worker${resolvedWorkerCount === 1 ? '' : 's'}.`,
+        log: `PIN-Only Batch: using ${resolvedWorkerCount} parallel worker${resolvedWorkerCount === 1 ? '' : 's'}.`,
         percentage: 0
     });
 
@@ -411,7 +411,7 @@ async function runPinOnlyBatch(companies, selectedAutomations, downloadPath, pro
         }
     };
 
-    await Promise.all(Array.from({ length: workerCount }, () => worker()));
+    await Promise.all(Array.from({ length: resolvedWorkerCount }, () => worker()));
 
     batchData.companies = companyResults.filter(Boolean);
 

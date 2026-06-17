@@ -16,7 +16,10 @@ let appState = {
     ledgerData: null,
     agentData: null,
     tccData: null,
+    assessmentDownloadsData: null,
     batchCompanies: [],
+    setupBatchCompanies: [],
+    workerCount: 10,
     pinOnlyBatchData: null,
     exports: {},
     automationResults: {},
@@ -78,6 +81,11 @@ const elements = {
     runTCCDownloader: document.getElementById('runTCCDownloader'),
     tccResults: document.getElementById('tccResults'),
 
+    // Assessment Downloads
+    runAssessmentDownloads: document.getElementById('runAssessmentDownloads'),
+    assessmentDownloadsResults: document.getElementById('assessmentDownloadsResults'),
+    assessmentObligationCheckboxes: document.querySelectorAll('.assessment-obligation-checkbox'),
+
     // Step 5: VAT Returns
     vatDateRange: document.getElementsByName('vatDateRange'),
     vatCustomDateInputs: document.getElementById('vatCustomDateInputs'),
@@ -115,6 +123,7 @@ const elements = {
     includeWhVatReturns: document.getElementById('includeWhVatReturns'),
     includeGeneralLedger: document.getElementById('includeGeneralLedger'),
     includeTaxCompliance: document.getElementById('includeTaxCompliance'),
+    includeAssessmentDownloads: document.getElementById('includeAssessmentDownloads'),
     includeLiabilities: document.getElementById('includeLiabilities'),
     selectPinOnlyAutomations: document.getElementById('selectPinOnlyAutomations'),
     selectPasswordAutomations: document.getElementById('selectPasswordAutomations'),
@@ -172,7 +181,27 @@ const elements = {
     settingsBrowserMode: document.getElementById('settingsBrowserMode'),
     openFilesFolder: document.getElementById('openFilesFolder'),
     saveConfig: document.getElementById('saveConfig'),
-    loadConfig: document.getElementById('loadConfig')
+    loadConfig: document.getElementById('loadConfig'),
+
+    // Run All batch mode
+    runAllBatchBanner: document.getElementById('runAllBatchBanner'),
+    runAllBatchBannerText: document.getElementById('runAllBatchBannerText'),
+    runAllSinglePanel: document.getElementById('runAllSinglePanel'),
+    clearBatchFromRunAll: document.getElementById('clearBatchFromRunAll'),
+
+    // Batch Setup (Company Setup tab)
+    downloadCsvTemplate: document.getElementById('downloadCsvTemplate'),
+    importSetupCsv: document.getElementById('importSetupCsv'),
+    setupCsvFile: document.getElementById('setupCsvFile'),
+    clearSetupCsv: document.getElementById('clearSetupCsv'),
+    workerCount: document.getElementById('workerCount'),
+    workerCountDown: document.getElementById('workerCountDown'),
+    workerCountUp: document.getElementById('workerCountUp'),
+    setupBatchPreview: document.getElementById('setupBatchPreview'),
+    setupBatchSummary: document.getElementById('setupBatchSummary'),
+    setupBatchTableBody: document.getElementById('setupBatchTableBody'),
+    confirmBatchSetup: document.getElementById('confirmBatchSetup'),
+    setupBatchHint: document.getElementById('setupBatchHint')
 };
 
 const SECTION_EXPORT_LABELS = {
@@ -187,6 +216,7 @@ const SECTION_EXPORT_LABELS = {
     whVat: 'WH VAT Returns',
     ledger: 'General Ledger',
     tcc: 'Tax Compliance',
+    assessmentDownloads: 'Assessment Downloads',
     runAll: 'Run All Bundle',
     pinOnlyBatch: 'PIN-Only Batch'
 };
@@ -203,7 +233,8 @@ const ACTION_RULES = {
     runVATExtraction: { pin: true, password: true, company: false, ready: 'Ready to extract VAT returns.' },
     runWhVATExtraction: { pin: true, password: true, company: false, ready: 'Ready to extract withholding VAT returns.' },
     runLedgerExtraction: { pin: true, password: true, company: false, ready: 'Ready to extract the general ledger.' },
-    runTCCDownloader: { pin: true, password: true, company: false, ready: 'Ready to download the tax compliance certificate.' }
+    runTCCDownloader: { pin: true, password: true, company: false, ready: 'Ready to download the tax compliance certificate.' },
+    runAssessmentDownloads: { pin: true, password: true, company: false, ready: 'Ready to download assessment notices locally.' }
 };
 
 const RUN_ALL_PASSWORD_REQUIRED = {
@@ -213,6 +244,7 @@ const RUN_ALL_PASSWORD_REQUIRED = {
     whVatReturns: 'WH VAT Returns',
     generalLedger: 'General Ledger',
     taxCompliance: 'Tax Compliance',
+    assessmentDownloads: 'Assessment Downloads',
     liabilities: 'Liabilities'
 };
 
@@ -240,6 +272,7 @@ const UI_ICONS = {
     calendar: 'fa-solid fa-calendar-days',
     user: 'fa-solid fa-user',
     certificate: 'fa-solid fa-certificate',
+    assessment: 'fa-solid fa-file-arrow-down',
     file: 'fa-solid fa-file-lines',
     clock: 'fa-solid fa-clock',
     save: 'fa-solid fa-floppy-disk',
@@ -460,6 +493,7 @@ function getSelectedAutomations() {
         whVatReturns: elements.includeWhVatReturns?.checked || false,
         generalLedger: elements.includeGeneralLedger?.checked || false,
         taxCompliance: elements.includeTaxCompliance?.checked || false,
+        assessmentDownloads: elements.includeAssessmentDownloads?.checked || false,
         liabilities: elements.includeLiabilities?.checked || false
     };
 }
@@ -563,6 +597,84 @@ function parseCsvRow(line) {
 
     values.push(current.trim());
     return values;
+}
+
+function parseSetupCsv(rawText) {
+    const normalizedInput = String(rawText || '').replace(/\r/g, '').trim();
+    if (!normalizedInput) return { companies: [], skippedCount: 0, duplicateCount: 0 };
+
+    const lines = normalizedInput.split('\n').map((l) => l.trim()).filter(Boolean);
+    if (!lines.length) return { companies: [], skippedCount: 0, duplicateCount: 0 };
+
+    const firstRow = parseCsvRow(lines[0]);
+    const normalizedHeaders = firstRow.map((v) => v.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim());
+    const hasHeader = normalizedHeaders.some((h) => ['pin', 'kra pin', 'kra_pin'].includes(h));
+
+    const seenPins = new Set();
+    const companies = [];
+    let skippedCount = 0;
+    let duplicateCount = 0;
+
+    lines.forEach((line, index) => {
+        const cols = parseCsvRow(line);
+        if (!cols.length) return;
+        if (index === 0 && hasHeader) return;
+
+        let pin = '', name = '', password = '';
+
+        if (hasHeader) {
+            const lookup = {};
+            normalizedHeaders.forEach((h, i) => { lookup[h] = cols[i] || ''; });
+            pin = lookup['pin'] || lookup['kra pin'] || lookup['kra_pin'] || '';
+            name = lookup['company name'] || lookup['company'] || lookup['name'] || lookup['taxpayer name'] || '';
+            password = lookup['password'] || lookup['kra password'] || lookup['pass'] || '';
+        } else {
+            [pin = '', name = '', password = ''] = cols;
+        }
+
+        const normalizedPin = pin.replace(/\s+/g, '').toUpperCase();
+        if (!normalizedPin) { skippedCount += 1; return; }
+        if (seenPins.has(normalizedPin)) { duplicateCount += 1; return; }
+
+        seenPins.add(normalizedPin);
+        companies.push({ pin: normalizedPin, name: name.trim(), password: password.trim() });
+    });
+
+    return { companies, skippedCount, duplicateCount };
+}
+
+function renderSetupBatchPreview(companies) {
+    if (!elements.setupBatchTableBody) return;
+    elements.setupBatchTableBody.innerHTML = '';
+    companies.forEach((c, i) => {
+        const tr = document.createElement('tr');
+        const maskedPassword = c.password ? '•'.repeat(Math.min(c.password.length, 8)) : '<span style="color:var(--gray-400)">—</span>';
+        tr.innerHTML = `<td>${i + 1}</td><td>${escapeHtml(c.pin)}</td><td>${escapeHtml(c.name) || '<span style="color:var(--gray-400)">—</span>'}</td><td>${maskedPassword}</td>`;
+        elements.setupBatchTableBody.appendChild(tr);
+    });
+}
+
+function applySetupBatch(companies) {
+    appState.setupBatchCompanies = companies;
+
+    if (!companies.length) {
+        if (elements.setupBatchPreview) elements.setupBatchPreview.classList.add('hidden');
+        if (elements.clearSetupCsv) elements.clearSetupCsv.classList.add('hidden');
+        if (elements.setupBatchHint) {
+            elements.setupBatchHint.textContent = 'Download the template, fill it in, then import it.';
+            elements.setupBatchHint.className = 'action-hint';
+        }
+        return;
+    }
+
+    renderSetupBatchPreview(companies);
+
+    if (elements.setupBatchSummary) {
+        elements.setupBatchSummary.textContent = `${companies.length} company record${companies.length === 1 ? '' : 's'} loaded — review below, then click Use for Batch Run.`;
+    }
+    if (elements.setupBatchPreview) elements.setupBatchPreview.classList.remove('hidden');
+    if (elements.clearSetupCsv) elements.clearSetupCsv.classList.remove('hidden');
+    if (elements.setupBatchHint) elements.setupBatchHint.textContent = '';
 }
 
 function parseBatchCompanies(rawInput) {
@@ -872,6 +984,97 @@ function setupEventListeners() {
         elements.runVATExtraction.addEventListener('click', runVATExtraction);
     }
 
+    // Batch Setup (Company Setup tab)
+    if (elements.downloadCsvTemplate) {
+        elements.downloadCsvTemplate.addEventListener('click', async () => {
+            const result = await ipcRenderer.invoke('save-csv-template', {
+                defaultPath: path.join(os.homedir(), 'Desktop', 'companies_template.csv')
+            });
+            if (result.success) {
+                showToast({ type: 'success', title: 'Template Saved', message: result.filePath });
+            } else if (!result.canceled) {
+                showToast({ type: 'error', title: 'Save Failed', message: 'Could not save the template file.' });
+            }
+        });
+    }
+
+    if (elements.importSetupCsv && elements.setupCsvFile) {
+        elements.importSetupCsv.addEventListener('click', () => elements.setupCsvFile.click());
+
+        elements.setupCsvFile.addEventListener('change', async (event) => {
+            const file = event.target.files?.[0];
+            if (!file) return;
+            const contents = await file.text();
+            elements.setupCsvFile.value = '';
+            const { companies, skippedCount, duplicateCount } = parseSetupCsv(contents);
+            const notes = [];
+            if (skippedCount) notes.push(`${skippedCount} empty/invalid row${skippedCount === 1 ? '' : 's'} skipped`);
+            if (duplicateCount) notes.push(`${duplicateCount} duplicate${duplicateCount === 1 ? '' : 's'} removed`);
+            if (notes.length) showToast({ type: 'info', title: 'Import Notes', message: notes.join('. ') + '.' });
+            applySetupBatch(companies);
+        });
+    }
+
+    if (elements.clearSetupCsv) {
+        elements.clearSetupCsv.addEventListener('click', () => {
+            applySetupBatch([]);
+        });
+    }
+
+    if (elements.workerCountDown) {
+        elements.workerCountDown.addEventListener('click', () => {
+            const current = parseInt(elements.workerCount?.value || '10', 10);
+            const next = Math.max(1, current - 1);
+            if (elements.workerCount) elements.workerCount.value = next;
+            appState.workerCount = next;
+        });
+    }
+
+    if (elements.workerCountUp) {
+        elements.workerCountUp.addEventListener('click', () => {
+            const current = parseInt(elements.workerCount?.value || '10', 10);
+            const next = Math.min(20, current + 1);
+            if (elements.workerCount) elements.workerCount.value = next;
+            appState.workerCount = next;
+        });
+    }
+
+    if (elements.workerCount) {
+        elements.workerCount.addEventListener('change', () => {
+            const val = Math.max(1, Math.min(20, parseInt(elements.workerCount.value || '10', 10) || 10));
+            elements.workerCount.value = val;
+            appState.workerCount = val;
+        });
+    }
+
+    if (elements.clearBatchFromRunAll) {
+        elements.clearBatchFromRunAll.addEventListener('click', () => {
+            appState.setupBatchCompanies = [];
+            appState.batchCompanies = [];
+            applySetupBatch([]);
+            updateUIState();
+            showToast({ type: 'info', title: 'Batch Cleared', message: 'Company batch removed. Run All will use the single-company credentials.' });
+        });
+    }
+
+    if (elements.confirmBatchSetup) {
+        elements.confirmBatchSetup.addEventListener('click', () => {
+            const companies = appState.setupBatchCompanies;
+            if (!companies.length) {
+                showToast({ type: 'warning', title: 'No Companies', message: 'Import a CSV first.' });
+                return;
+            }
+            appState.batchCompanies = companies.map(({ pin, name }) => ({ pin, name }));
+            const withPassword = companies.filter((c) => c.password);
+            if (withPassword.length && !appState.companyData) {
+                const first = withPassword[0];
+                appState.companyData = { pin: first.pin, password: first.password, name: first.name, browserSettings: getBrowserSettings() };
+            }
+            showToast({ type: 'success', title: 'Batch Ready', message: `${companies.length} company record${companies.length === 1 ? '' : 's'} loaded. Switch to Run All to process the full list.` });
+            updateUIState();
+        });
+    }
+
     // WH VAT Returns
     elements.whVatDateRange.forEach(radio => {
         radio.addEventListener('change', toggleWhVATDateInputs);
@@ -989,6 +1192,11 @@ function setupEventListeners() {
     // Tax Compliance
     if (elements.runTCCDownloader) {
         elements.runTCCDownloader.addEventListener('click', runTCCDownloader);
+    }
+
+    // Assessment Downloads
+    if (elements.runAssessmentDownloads) {
+        elements.runAssessmentDownloads.addEventListener('click', runAssessmentDownloads);
     }
 
     if (elements.saveConfig) {
@@ -1158,7 +1366,7 @@ function switchTab(tabId) {
     });
 
     if (elements.contentArea) {
-        elements.contentArea.classList.toggle('wide-layout', tabId === 'all-automations');
+        elements.contentArea.classList.toggle('wide-layout', tabId === 'all-automations' || tabId === 'assessment-downloads');
     }
 
     // Update page header
@@ -1178,7 +1386,8 @@ function switchTab(tabId) {
         'wh-vat-returns': 9,
         'general-ledger': 10,
         'tax-compliance': 11,
-        'all-automations': 12
+        'assessment-downloads': 12,
+        'all-automations': 13
     };
     appState.currentStep = stepMap[tabId] || 1;
 
@@ -1258,6 +1467,10 @@ function updatePageHeader(tabId) {
             title: 'Tax Compliance Certificate',
             description: 'Download the latest tax compliance certificate.'
         },
+        'assessment-downloads': {
+            title: 'Assessment Downloads',
+            description: 'Download assessment notices for the current company setup only.'
+        },
         'all-automations': {
             title: 'Run All Automations',
             description: 'PIN-only automations can run without a password.'
@@ -1292,7 +1505,18 @@ function updateUIState() {
     renderValidationExportInfo();
     updateAutomationSelectionState();
 
-    // Update Run All credentials display
+    // Batch mode vs single-company mode for Run All tab
+    const isBatchMode = appState.setupBatchCompanies.length > 0;
+    if (elements.runAllBatchBanner) elements.runAllBatchBanner.classList.toggle('hidden', !isBatchMode);
+    if (elements.runAllSinglePanel) elements.runAllSinglePanel.classList.toggle('hidden', isBatchMode);
+    if (isBatchMode && elements.runAllBatchBannerText) {
+        const total = appState.setupBatchCompanies.length;
+        const withPwd = appState.setupBatchCompanies.filter((c) => c.password).length;
+        const pwdNote = withPwd === total ? 'all with passwords' : withPwd === 0 ? 'no passwords — PIN-only automations only' : `${withPwd} with passwords`;
+        elements.runAllBatchBannerText.textContent = `${total} company${total === 1 ? '' : 'ies'} loaded from CSV (${pwdNote}). Run All will process each company in sequence.`;
+    }
+
+    // Update Run All credentials display (single mode only)
     if (elements.runAllPinDisplay) elements.runAllPinDisplay.value = credentials.pin || '';
     if (elements.runAllPasswordDisplay) elements.runAllPasswordDisplay.value = credentials.password || '';
     if (elements.runAllCompanyDisplay) elements.runAllCompanyDisplay.value = appState.companyData?.name || 'Not fetched yet';
@@ -1315,6 +1539,9 @@ function updateUIState() {
         runAllReason = 'A process is already running. Wait for it to finish first.';
     } else if (!selectedKeys.length) {
         runAllReason = 'Select at least one automation to run.';
+    } else if (isBatchMode) {
+        const total = appState.setupBatchCompanies.length;
+        runAllReadyMessage = `Ready to run selected automations for ${total} company${total === 1 ? '' : 'ies'} in sequence.`;
     } else if (!pinAvailable) {
         runAllReason = 'Enter a KRA PIN before running automations.';
     } else {
@@ -1538,6 +1765,7 @@ async function fetchCompanyDetails() {
             appState.ledgerData = null; // Reset ledger data
             appState.agentData = null;
             appState.tccData = null; // Reset TCC data
+            appState.assessmentDownloadsData = null;
             appState.exports = {};
             updateValidationDisplay({ status: 'Not Validated' });
 
@@ -3339,6 +3567,208 @@ function displayTCCResults(data) {
     elements.tccResults.classList.remove('hidden');
 }
 
+function getSelectedAssessmentObligations() {
+    return [...(elements.assessmentObligationCheckboxes || [])]
+        .filter((checkbox) => checkbox.checked)
+        .map((checkbox) => checkbox.value);
+}
+
+async function runAssessmentDownloads() {
+    console.log('Run Assessment Downloads clicked');
+    if (!hasPin() || !hasPassword()) {
+        await showMessage({
+            type: 'error',
+            title: 'Prerequisites Not Met',
+            message: 'Enter both the KRA PIN and password before downloading assessments.'
+        });
+        return;
+    }
+
+    const obligations = getSelectedAssessmentObligations();
+    if (!obligations.length) {
+        await showMessage({
+            type: 'error',
+            title: 'No Obligation Selected',
+            message: 'Select at least one tax obligation before downloading assessments.'
+        });
+        return;
+    }
+
+    try {
+        appState.isProcessing = true;
+        updateUIState();
+        showProgressSection('Downloading assessment notices...');
+
+        const result = await ipcRenderer.invoke('run-assessment-downloads', {
+            company: buildCompanyPayload(),
+            options: { obligations },
+            downloadPath: elements.downloadPath.value
+        });
+
+        if (result.success) {
+            appState.assessmentDownloadsData = result;
+            normalizeExportFiles('assessmentDownloads', result);
+            displayAssessmentDownloadsResults(result);
+            hideProgressSection();
+            await showMessage({
+                type: 'info',
+                title: 'Success',
+                message: `Assessment download completed. ${result.summary?.totalDownloads || 0} file(s) saved locally.`
+            });
+        } else {
+            throw new Error(result.error || 'Failed to download assessments');
+        }
+    } catch (error) {
+        console.error('Error downloading assessments:', error);
+        await showMessage({
+            type: 'error',
+            title: 'Error',
+            message: `Failed to download assessments: ${error.message}`
+        });
+        hideProgressSection();
+    } finally {
+        appState.isProcessing = false;
+        updateUIState();
+    }
+}
+
+function displayAssessmentDownloadsResults(result) {
+    if (!elements.assessmentDownloadsResults) return;
+
+    const groups = result.results || [];
+    const extractedByPath = new Map((result.extractedDetails || []).map((detail) => [detail.file_path, detail]));
+    const rows = groups.flatMap((group) => {
+        const downloadsByKey = new Map((group.downloads || []).map((download) => [`${download.ackNo || ''}|${download.srNo || ''}`, download]));
+        return (group.records || []).map((record) => {
+            const download = downloadsByKey.get(`${record.ackNo || ''}|${record.srNo || ''}`) || {};
+            const extracted = download.filePath ? extractedByPath.get(download.filePath) : null;
+            return {
+                obligationName: group.obligationName || '',
+                subProcessName: group.subProcessName || '',
+                srNo: record.srNo || download.srNo || '',
+                ackNo: record.ackNo || download.ackNo || '',
+                ackDate: record.ackDate || '',
+                status: record.status || '',
+                filePath: download.filePath || '',
+                fileName: download.fileName || '',
+                documentTitle: extracted?.document_title || '',
+                periodFrom: extracted?.period_from || '',
+                periodTo: extracted?.period_to || '',
+                totalAmount: extracted?.total_amount || ''
+            };
+        });
+    });
+
+    const totalRecords = result.summary?.totalRecords ?? rows.length;
+    const totalDownloads = result.summary?.totalDownloads ?? result.files?.length ?? 0;
+    const failedGroups = groups.filter((group) => group.error).length;
+    const extractedCount = result.extractedDetails?.length || 0;
+    const summaryFiles = result.summaryFiles || [];
+    const excelSummary = summaryFiles.find((file) => String(file).toLowerCase().endsWith('.xlsx'));
+    const csvSummary = summaryFiles.find((file) => String(file).toLowerCase().endsWith('.csv'));
+    const jsonSummary = summaryFiles.find((file) => String(file).toLowerCase().endsWith('.json'));
+    const firstPdf = rows.find((row) => row.filePath)?.filePath || '';
+    const pdfFolder = firstPdf ? path.dirname(firstPdf) : (result.downloadPath || '');
+    const summaryActions = [
+        excelSummary ? `<button class="btn btn-primary btn-sm" data-action-type="open-file" data-path="${escapeHtml(excelSummary)}"><span class="btn-icon">${icon('excel')}</span>Open Excel Summary</button>` : '',
+        csvSummary ? `<button class="btn btn-secondary btn-sm" data-action-type="open-file" data-path="${escapeHtml(csvSummary)}"><span class="btn-icon">${icon('file')}</span>Open CSV</button>` : '',
+        jsonSummary ? `<button class="btn btn-secondary btn-sm" data-action-type="open-file" data-path="${escapeHtml(jsonSummary)}"><span class="btn-icon">${icon('file')}</span>Open JSON</button>` : '',
+        pdfFolder ? `<button class="btn btn-ghost btn-sm" data-action-type="open-folder" data-path="${escapeHtml(pdfFolder)}"><span class="btn-icon">${icon('folder')}</span>Open PDF Folder</button>` : ''
+    ].filter(Boolean).join('');
+
+    let contentHtml = `
+        <div class="extraction-results">
+            <div class="results-header">
+                <div class="header-content">
+                    <h3>${icon('assessment')} Assessment Downloads</h3>
+                    <div class="header-meta">
+                        <span class="company-name">${escapeHtml(appState.companyData?.name || 'Company')}</span>
+                        <span class="pin-badge">PIN: ${escapeHtml(appState.companyData?.pin || 'N/A')}</span>
+                        <span class="extraction-date">Downloaded: ${new Date().toLocaleDateString()}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="summary-cards">
+                <div class="summary-card"><div class="card-icon">${icon('file')}</div><div class="card-content"><div class="card-label">Records</div><div class="card-value">${totalRecords}</div></div></div>
+                <div class="summary-card"><div class="card-icon">${icon('save')}</div><div class="card-content"><div class="card-label">PDF Downloads</div><div class="card-value">${totalDownloads}</div></div></div>
+                <div class="summary-card"><div class="card-icon">${icon('excel')}</div><div class="card-content"><div class="card-label">PDFs Parsed</div><div class="card-value">${extractedCount}</div></div></div>
+                <div class="summary-card"><div class="card-icon">${icon('warning')}</div><div class="card-content"><div class="card-label">Errors</div><div class="card-value ${failedGroups ? 'status-error' : 'status-active'}">${failedGroups}</div></div></div>
+            </div>
+            <div class="assessment-download-actions">
+                ${summaryActions || buildResultActionButtons('assessmentDownloads')}
+            </div>
+    `;
+
+    if (rows.length) {
+        contentHtml += `
+            <div class="data-section">
+                <div class="section-header"><h4>Assessment Records (${rows.length})</h4></div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Obligation</th>
+                            <th>Sub Process</th>
+                            <th>Ack No</th>
+                            <th>Document</th>
+                            <th>Period</th>
+                            <th>Amount</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>File</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${rows.map((row) => `
+                            <tr>
+                                <td>${escapeHtml(row.obligationName || '-')}</td>
+                                <td>${escapeHtml(row.subProcessName || '-')}</td>
+                                <td>${escapeHtml(row.ackNo || '-')}</td>
+                                <td>${escapeHtml(row.documentTitle || '-')}</td>
+                                <td>${escapeHtml([row.periodFrom, row.periodTo].filter(Boolean).join(' to ') || '-')}</td>
+                                <td>${escapeHtml(row.totalAmount || '-')}</td>
+                                <td>${escapeHtml(row.ackDate || '-')}</td>
+                                <td><span class="status-badge">${escapeHtml(row.status || 'Unknown')}</span></td>
+                                <td>${row.filePath ? `<button class="btn btn-secondary btn-sm" data-action-type="open-file" data-path="${escapeHtml(row.filePath)}"><span class="btn-icon">${icon('file')}</span>${escapeHtml(row.fileName || path.basename(row.filePath))}</button>` : '-'}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+        `;
+    } else {
+        contentHtml += `
+            <div class="no-data-message">
+                <p>No assessment records were found for the selected obligations.</p>
+            </div>
+        `;
+    }
+
+    const errorGroups = groups.filter((group) => group.error);
+    if (errorGroups.length) {
+        contentHtml += `
+            <div class="data-section">
+                <div class="section-header"><h4>Skipped or Failed Checks</h4></div>
+                <table class="data-table">
+                    <thead><tr><th>Obligation</th><th>Sub Process</th><th>Error</th></tr></thead>
+                    <tbody>
+                        ${errorGroups.map((group) => `
+                            <tr>
+                                <td>${escapeHtml(group.obligationName || '-')}</td>
+                                <td>${escapeHtml(group.subProcessName || '-')}</td>
+                                <td>${escapeHtml(group.error)}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+        `;
+    }
+
+    contentHtml += `${buildExportFilesTable('assessmentDownloads')}</div>`;
+    elements.assessmentDownloadsResults.innerHTML = contentHtml;
+    elements.assessmentDownloadsResults.classList.remove('hidden');
+}
+
 // Expose globally for inline onclick handlers
 window.viewTCCPDF = function (filePath) {
     try {
@@ -3422,7 +3852,65 @@ window.openFolder = async function (folderPath) {
     }
 };
 
+async function runAllAutomationsForBatch() {
+    const batchCompanies = appState.setupBatchCompanies;
+    const selectedAutomations = getSelectedAutomations();
+
+    if (!Object.values(selectedAutomations).some((s) => s)) {
+        await showMessage({ type: 'warning', title: 'No Automations Selected', message: 'Select at least one automation to run.' });
+        return;
+    }
+
+    if (!batchCompanies.length) {
+        await showMessage({ type: 'warning', title: 'No Companies', message: 'Import companies from CSV in Company Setup first.' });
+        return;
+    }
+
+    const downloadPath = elements.downloadPath?.value || path.join(os.homedir(), 'Downloads', 'KRA POST PORTUM TOOL');
+    const vatDateRange = getIndividualVATDateRange();
+    const whVatDateRange = getIndividualWhVATDateRange();
+    const total = batchCompanies.length;
+
+    try {
+        appState.isProcessing = true;
+        updateUIState();
+        showProgressSection(`Starting batch run for ${total} company${total === 1 ? '' : 'ies'}…`);
+
+        const companies = batchCompanies.map((c) => ({ ...c, browserSettings: getBrowserSettings() }));
+
+        const result = await ipcRenderer.invoke('run-all-automations-batch', {
+            companies,
+            selectedAutomations,
+            vatDateRange,
+            whVatDateRange,
+            downloadPath,
+            workerCount: appState.workerCount
+        });
+
+        if (!result.success) throw new Error(result.error || 'Batch run failed');
+
+        hideProgressSection();
+
+        await showMessage({
+            type: 'info',
+            title: `Batch Complete — ${result.companies} Company${result.companies === 1 ? '' : 'ies'}`,
+            message: `Consolidated report saved to:\n${result.reportPath}\n\nAll company files are in:\n${result.downloadPath}`
+        });
+    } catch (error) {
+        console.error('Batch automation error:', error);
+        await showMessage({ type: 'error', title: 'Batch Error', message: `Batch run failed: ${error.message}` });
+        hideProgressSection();
+    } finally {
+        appState.isProcessing = false;
+        updateUIState();
+    }
+}
+
 async function runAllAutomations() {
+    if (appState.setupBatchCompanies.length > 0) {
+        return runAllAutomationsForBatch();
+    }
+
     console.log('Run All Automations clicked');
 
     const selectedAutomations = getSelectedAutomations();
@@ -3555,7 +4043,8 @@ async function runPinOnlyBatch() {
         const result = await ipcRenderer.invoke('run-pin-only-batch', {
             companies: batchCompanies,
             selectedAutomations: selectedAutomationKeys,
-            downloadPath: elements.downloadPath?.value || path.join(os.homedir(), 'Downloads', 'KRA POST PORTUM TOOL')
+            downloadPath: elements.downloadPath?.value || path.join(os.homedir(), 'Downloads', 'KRA POST PORTUM TOOL'),
+            workerCount: appState.workerCount
         });
 
         if (!result.success) {

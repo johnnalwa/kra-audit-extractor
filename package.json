@@ -48,6 +48,7 @@
             "automation-table-styles.css",
             "config.json",
             "tesseract-config.js",
+            "lib/**/*",
             "automations/**/*",
             "node_modules/**/*",
             "!node_modules/.cache",
