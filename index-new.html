@@ -188,7 +188,26 @@
                   <span class="section-tag">Password optional here</span>
                 </div>
               </div>
-             
+              <div class="card-body">
+                <div class="form-group">
+                  <label for="kraPin">KRA PIN</label>
+                  <input type="text" id="kraPin" class="form-input" placeholder="e.g. P051766288C" autocomplete="off" spellcheck="false" />
+                </div>
+                <div class="form-group">
+                  <label for="kraPassword">KRA Password <span style="font-weight:400;color:var(--gray-400)">(optional for PIN-only tasks)</span></label>
+                  <input type="password" id="kraPassword" class="form-input" placeholder="KRA iTax password" autocomplete="new-password" />
+                </div>
+                <div class="button-group">
+                  <button id="fetchCompanyDetails" class="btn btn-primary" type="button" disabled>
+                    <span class="btn-icon"><i class="fa-solid fa-magnifying-glass"></i></span>Fetch Company Details
+                  </button>
+                  <button id="validateCredentials" class="btn btn-secondary" type="button" disabled>
+                    <span class="btn-icon"><i class="fa-solid fa-shield-halved"></i></span>Validate Credentials
+                  </button>
+                </div>
+                <p id="fetchCompanyDetailsHint" class="action-hint">Enter a KRA PIN above to get started.</p>
+                <p id="validateCredentialsHint" class="action-hint"></p>
+              </div>
             </div>
             <div class="card" id="batchSetupCard">
               <div class="card-header">
