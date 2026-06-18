@@ -1,3 +1,7 @@
+// Must be set before any Playwright require() so it finds the bundled Chromium
+// that was placed in playwright-core/.local-browsers/ during the build step.
+process.env.PLAYWRIGHT_BROWSERS_PATH = '0';
+
 const { app, BrowserWindow, ipcMain, dialog, shell, net } = require('electron');
 const path = require('path');
 const fs = require('fs');

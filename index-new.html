@@ -188,53 +188,7 @@
                   <span class="section-tag">Password optional here</span>
                 </div>
               </div>
-              <div class="card-body">
-                <div class="form-grid">
-                  <div class="form-group">
-                    <label for="kraPin">KRA PIN</label>
-                    <input type="text" id="kraPin" class="form-input" placeholder="e.g. P051766288C" />
-                  </div>
-                  <div class="form-group">
-                    <label for="kraPassword">Password</label>
-                    <input type="password" id="kraPassword" class="form-input" placeholder="Leave blank unless you will run login-protected sections" />
-                  </div>
-                </div>
-                <div class="button-group">
-                  <button id="fetchCompanyDetails" class="btn btn-primary" type="button"><span class="btn-icon"><i class="fa-solid fa-building"></i></span>Get Company Details</button>
-                  <button id="validateCredentials" class="btn btn-secondary" type="button"><span class="btn-icon"><i class="fa-solid fa-shield-halved"></i></span>Validate Login</button>
-                </div>
-                <p id="fetchCompanyDetailsHint" class="action-hint"></p>
-                <p id="validateCredentialsHint" class="action-hint"></p>
-                <div class="capability-panel">
-                  <div class="capability-column">
-                    <h4><i class="fa-solid fa-key"></i> Require PIN Only</h4>
-                    <table class="data-table compact-table">
-                      <thead><tr><th>Section</th><th>Output</th></tr></thead>
-                      <tbody>
-                        <tr><td>Company Details</td><td>Excel sheet</td></tr>
-                        <tr><td>Manufacturer Details</td><td>Excel sheet</td></tr>
-                        <tr><td>Obligation Check</td><td>Excel sheet</td></tr>
-                        <tr><td>Agent Status</td><td>Excel sheet</td></tr>
-                      </tbody>
-                    </table>
-                  </div>
-                  <div class="capability-column">
-                    <h4><i class="fa-solid fa-lock"></i> Require PIN and Password</h4>
-                    <table class="data-table compact-table">
-                      <thead><tr><th>Section</th><th>Output</th></tr></thead>
-                      <tbody>
-                        <tr><td>Validation</td><td>Excel sheet</td></tr>
-                        <tr><td>Director Details</td><td>Excel sheet</td></tr>
-                        <tr><td>Liabilities</td><td>Excel sheet</td></tr>
-                        <tr><td>VAT Returns</td><td>Excel workbook</td></tr>
-                        <tr><td>WH VAT Returns</td><td>Excel workbook</td></tr>
-                        <tr><td>General Ledger</td><td>Excel workbook</td></tr>
-                        <tr><td>Tax Compliance</td><td>Downloaded file</td></tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
+             
             </div>
             <div class="card" id="batchSetupCard">
               <div class="card-header">
@@ -301,6 +255,8 @@
                 <p id="setupBatchHint" class="action-hint">Download the template, fill it in, then import it.</p>
               </div>
             </div>
+             
+
 
             <div id="companyDetailsResult" class="card hidden">
               <div class="card-header"><div><h3>Company Information</h3><p class="section-subtitle">Fetched company data and the latest export link appear below.</p></div></div>

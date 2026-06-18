@@ -7,7 +7,9 @@
         "start": "electron .",
         "dev": "nodemon --watch . --exec electron . --dev",
         "watch": "nodemon --watch . --exec electron .",
+        "prebuild": "node scripts/install-browsers.js",
         "build": "electron-builder --win --x64",
+        "predist": "node scripts/install-browsers.js",
         "dist": "electron-builder --publish=never"
     },
     "keywords": [
@@ -50,26 +52,16 @@
             "tesseract-config.js",
             "lib/**/*",
             "automations/**/*",
+            "scripts/**/*",
             "node_modules/**/*",
-            "!node_modules/.cache",
-            "!node_modules/.bin"
-        ],
-        "extraResources": [
-            {
-                "from": "assets",
-                "to": "assets",
-                "filter": [
-                    "**/*"
-                ]
-            },
-            {
-                "from": "node_modules/tesseract.js/dist",
-                "to": "tesseract-dist"
-            },
-            {
-                "from": "node_modules/tesseract.js-core",
-                "to": "tesseract-core"
-            }
+            "!node_modules/.cache/**/*",
+            "!node_modules/.bin/**/*",
+            "!node_modules/electron/**/*",
+            "!node_modules/electron-builder/**/*",
+            "!node_modules/nodemon/**/*",
+            "!**/ORIGINAL AUTOMATION/**/*",
+            "!**/image/**/*",
+            "!**/*.md"
         ],
         "win": {
             "target": [
@@ -97,6 +89,13 @@
             "createStartMenuShortcut": true,
             "shortcutName": "KRA POST PORTUM TOOL"
         },
+        "extraResources": [
+            {
+                "from": "assets",
+                "to": "assets",
+                "filter": ["**/*"]
+            }
+        ],
         "mac": {
             "target": "dmg",
             "icon": "assets/icon.icns",
